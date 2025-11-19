@@ -10,12 +10,6 @@
 
 Llama2 遵循了 GPT 系列开创的 **Decoder-Only** 架构。这意味着它完全由 **Transformer 解码器层** 堆叠而成，天然适用于自回归的文本生成任务。
 
-<p align="center">
-  <img src="./images/6_1_1.svg" width="40%" alt="Llama2 架构图" />
-  <br />
-  <em>图 6-1：Llama2 架构示意图</em>
-</p>
-
 如图 6-1 所示，Llama2 的核心由 N 个相同的 Transformer Block 堆叠而成。Block 内部的数据流展示了 Llama2 的设计：
 
 - **预归一化 (Pre-Normalization)**：与经典 Transformer 的后归一化不同，输入在进入注意力层和前馈网络**之前**，都会先经过一次 `RMS Norm`。这被认为是提升大模型训练稳定性的关键。
@@ -24,6 +18,12 @@ Llama2 遵循了 GPT 系列开创的 **Decoder-Only** 架构。这意味着它�
 - **残差连接**：每个子层（注意力层和前馈网络）的输出都通过残差连接（`+`号）与子层的输入相加，保留了原始信息流。
 
 整个模型的数据流自下而上贯穿所有 Transformer Block，最后经过一次最终的 `RMS Norm` 和一个线性输出层，得到 Logits。
+
+<p align="center">
+  <img src="./images/6_1_1.svg" width="40%" alt="Llama2 架构图" />
+  <br />
+  <em>图 6-1：Llama2 架构示意图</em>
+</p>
 
 与原始 Transformer 解码器相比，Llama2 及其同类模型进行了一系列改进，以提升性能和训练稳定性。它的数据流可以概括为：
 
