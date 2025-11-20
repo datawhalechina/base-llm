@@ -1,26 +1,43 @@
-- **第1章：NLP概述**
-    - [NLP概述](./chapter1/01_nlp_intro.md)
+- **第1章：NLP简介**
+    - [NLP 概述](./chapter1/01_nlp_intro.md)
 - **第2章：文本表示与词向量**
     - [初级分词技术](./chapter2/03_tokenization.md)
     - [词向量表示](./chapter2/04_word_vector.md)
-    - [从主题模型到Word2Vec](./chapter2/05_Word2Vec.md)
-    - [基于Gensim的词向量实战](./chapter2/06_gensim.md)
+    - [从主题模型到 Word2Vec](./chapter2/05_Word2Vec.md)
+    - [基于 Gensim 的词向量实战](./chapter2/06_gensim.md)
 - **第3章：循环神经网络**
     - [循环神经网络](./chapter3/08_RNN.md)
     - [LSTM 与 GRU](./chapter3/09_LSTM&GRU.md)
 - **第4章：注意力机制与Transformer**
     - [Seq2Seq 架构](./chapter4/10_seq2seq.md)
     - [注意力机制](./chapter4/11_attention.md)
-    - [深入解析Transformer](./chapter4/12_transformer.md)
+    - [深入解析 Transformer](./chapter4/12_transformer.md)
+- **第5章：语言模型**
+    - [BERT 结构及应用](./chapter5/13_Bert.md)
+    - [GPT 结构及应用](./chapter5/14_GPT.md)
+    - [T5 结构及应用](./chapter5/15_T5.md)
+- **第6章：深入大模型架构**
+    - [手搓一个大模型](./chapter6/16_handcraft_llama2.md)
 
-- **第5章：预训练模型**
-    - [BERT 架构及应用](./chapter5/13_Bert.md)
+- **第7章：文本分类**
+    - [文本分类简单实现](./chapter7/01_text_classification.md)
+    - [基于 LSTM 的文本分类](./chapter7/02_lstm_text_classification.md)
+    - [微调 BERT 模型进行文本分类](./chapter7/03_bert_text_classification.md)
+- **第8章：命名实体识别**
+    - [命名实体识别概要](./chapter8/01_named_entity_recognition.md)
+    - [NER 项目的数据处理](./chapter8/02_data_processing.md)
+    - [模型构建、训练与推理](./chapter8/03_model_building_and_training.md)
+    - [模型的推理与优化](./chapter8/04_evaluation_and_prediction.md)
 
-- **第7章：应用实践**
-    - [文本分类](./chapter7/01_text_classification.md)
+- **第11章：参数高效微调**
+    - [PEFT 技术综述](./chapter11/01_PEFT.md)
+    - [LoRA 方法详解](./chapter11/02_lora.md)
+    - [基于 peft 库的 LoRA 实战](./chapter11/03_peft_lora.md)
+    - [Qwen2.5 微调私有数据](./chapter11/04_qwen2.5_qlora.md)
+- **第12章：高级微调技术**
+    - [RLHF 技术详解](./chapter12/01_RLHF.md)
 
-- **第8章：进阶主题**
-    - [命名实体识别](./chapter8/01_named_entity_recognition.md)
-    - [第一节 命名实体识别概要](chapter8/01_named_entity_recognition.md)
-    - [第二节 NER 项目的数据处理](chapter8/02_data_processing.md)
-    - [第三节 模型构建、训练与推理](chapter8/03_model_building_and_training.md)
+- **第14章：模型服务部署**
+    - [FastAPI 模型部署实战](./chapter14/01_fastapi.md)
+    - [云服务器模型部署实战](./chapter14/02_uv_linux.md)
+    - [使用 Docker Compose 部署模型服务](./chapter14/03_docker_deploy.md)
