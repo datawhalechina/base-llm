@@ -62,6 +62,7 @@
 - **第5章：语言模型**
     - [x] [BERT 结构及应用](./docs/chapter5/13_Bert.md)
     - [x] [GPT 结构及应用](./docs/chapter5/14_GPT.md)
+    - [x] [T5 结构及应用](./docs/chapter5/15_T5.md)
 - **第6章：深入大模型架构**
     - [x] [手搓一个大模型](./docs/chapter6/16_handcraft_llama2.md)
     - [ ] [MOE 架构解析]
