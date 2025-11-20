@@ -14,10 +14,10 @@
 <p align="center">
   <img src="./images/12_1_1.png" width="70%" alt="InstructGPT 模型与 GPT-3 的人类偏好对比" />
   <br />
-  <em>图 12-1：InstructGPT 与 GPT-3 人类偏好对比</em>
+  <em>图 12-1 InstructGPT 与 GPT-3 人类偏好对比</em>
 </p>
 
-> 需要明确的是，PEFT 和 RLHF 是两条解决不同问题的技术路线，它们**正交且互补**：
+> PEFT 和 RLHF 是两条解决不同问题的技术路线，它们**正交且互补**：
 > 
 > - **PEFT** 是一套**方法**，旨在解决**效率问题**，即如何用更少的资源来微调模型。
 > - **RLHF** 则是一个**范式**，旨在解决**对齐问题**，即如何让模型的输出更符合人类偏好。
@@ -69,7 +69,7 @@
 <p align="center">
   <img src="./images/12_1_2.png" width="80%" alt="RLHF 经典三步法示意图" />
   <br />
-  <em>图 12-2：RLHF 经典三步法示意图</em>
+  <em>图 12-2 RLHF 经典三步法示意图</em>
 </p>
 
 ### 3.1 训练奖励模型 (Training a Reward Model, RM)
@@ -125,7 +125,7 @@ $$
 <p align="center">
   <img src="./images/12_1_3.png" width="80%" alt="PPO 的裁剪代理目标函数" />
   <br />
-  <em>图 12-3：PPO 的裁剪代理目标函数</em>
+  <em>图 12-3 PPO 的裁剪代理目标函数</em>
 </p>
 
 但研究者发现，单纯用 PPO 优化奖励模型，可能会导致模型在某些传统 NLP 任务（如 SQuAD）上的性能下降，这种现象被称为 **“对齐税”（Alignment Tax）**。
@@ -148,7 +148,7 @@ $$
 <p align="center">
   <img src="./images/12_1_4.png" width="90%" alt="PPO-ptx 缓解对齐税" />
   <br />
-  <em>图 12-4：PPO-ptx 缓解对齐税</em>
+  <em>图 12-4 PPO-ptx 缓解对齐税</em>
 </p>
 
 #### 3.2.2 直接偏好优化（DPO）
@@ -178,7 +178,7 @@ $$
 <p align="center">
   <img src="./images/12_1_5.png" width="80%" alt="DPO 与 PPO 的 Reward-KL 效率前沿对比" />
   <br />
-  <em>图 12-5：DPO 与 PPO 的 Reward-KL 效率前沿对比</em>
+  <em>图 12-5 DPO 与 PPO 的 Reward-KL 效率前沿对比</em>
 </p>
 
 #### 3.2.3 PPO 与 DPO 的选择
@@ -194,7 +194,7 @@ $$
 <p align="center">
   <img src="./images/12_1_6.png" width="70%" alt="InstructGPT 在 TruthfulQA 上的真实性表现" />
   <br />
-  <em>图 12-6：InstructGPT 在 TruthfulQA 上的真实性表现</em>
+  <em>图 12-6 InstructGPT 在 TruthfulQA 上的真实性表现</em>
 </p>
 
 如图 12-6 展示了模型在 TruthfulQA 基准上的真实性表现。其中，灰色柱表示“真实性（truthfulness）”，彩色柱表示“真实性与信息量（truthfulness and informativeness）”。整体来看，经过 RLHF 的 InstructGPT 模型（PPO-ptx/PPO）在 TruthfulQA 上相较 GPT-3 基线更真实且更具信息量。但需注意，原论文报告 1.3B 的 PPO-ptx 模型在 TruthfulQA 上略低于同尺寸 GPT-3。
