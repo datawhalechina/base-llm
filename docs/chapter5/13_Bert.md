@@ -1,4 +1,4 @@
-# 第一节 BERT 架构及应用
+# 第一节 BERT 结构及应用
 
 我们在前面的章节中探讨了 Transformer 架构，它的结构是由一个编码器和一个解码器组成，而这两部分内部又分别由 N 个相同的层堆叠而成。Transformer 的提出催生了许多强大的预训练模型。有趣的是，这些后续模型往往只采用了 Transformer 架构的一部分。其中，以 GPT 为代表的模型**采用解码器结构**，主要任务是预测下一个词元，这种特性使其天然适用于文本生成任务。而本章的主角 **BERT（Bidirectional Encoder Representations from Transformers）**，则完全基于**编码器结构**构建 [^1]。
 
