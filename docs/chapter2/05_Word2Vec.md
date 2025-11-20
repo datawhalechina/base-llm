@@ -24,7 +24,7 @@
 该方法将获取词向量的过程，巧妙地转化成了一个矩阵分解问题。
 
 <p align="center">
-  <img src="./images/2_3_1.gif" width="100%" alt="矩阵分解图示" />
+  <img src="./images/2_3_1.gif" width="80%" alt="矩阵分解图示" />
   <br />
   <em>图 2-2 矩阵分解图示</em>
 </p>
@@ -130,7 +130,7 @@ Word2Vec包含两种具体的实现模型：CBOW 和 Skip-gram。两者在任务
 如图 2-3，CBOW（Continuous Bag-of-Words）的任务是 **“根据上下文预测中心词”**。
 
 <p align="center">
-  <img src="./images/2_3_2.svg" width="100%" alt="CBOW" />
+  <img src="./images/2_3_2.svg" width="80%" alt="CBOW" />
   <br />
   <em>图 2-3 CBOW</em>
 </p>

@@ -124,7 +124,7 @@ print(f"加载词典后: {jieba.lcut(text, cut_all=False)}")
 #### 2.2.3 精确模式工作流程
 
 <p align="center">
-  <img src="./images/2_1_1.svg" width="100%" alt="精确模式工作流程" />
+  <img src="./images/2_1_1.svg" width="80%" alt="精确模式工作流程" />
   <br />
   <em>图 2-1 jieba 精确模式工作流程</em>
 </p>
