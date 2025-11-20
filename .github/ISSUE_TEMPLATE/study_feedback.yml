@@ -1,0 +1,45 @@
+name: "学习反馈：学习体验与改进建议"
+description: "分享你的学习体验、遇到的困惑，以及对教程改进的建议"
+labels: ["feedback"]
+title: "[学习反馈] 简要概述你的体验"
+body:
+  - type: dropdown
+    id: experience
+    attributes:
+      label: 整体学习体验
+      options:
+        - 非常好
+        - 较好
+        - 一般
+        - 需要改进
+        - 较差
+    validations:
+      required: true
+  - type: textarea
+    id: what_helped
+    attributes:
+      label: 觉得教程哪些部分做得比较好？
+      placeholder: 例如：章节结构清晰、代码可运行、图示易懂...
+  - type: textarea
+    id: what_confusing
+    attributes:
+      label: 学习过程中遇到的困惑/不足
+      description: 请指出具体章节或文件，便于改进
+      placeholder: 例如：`docs/chapter3/06_vector_embedding.md` 的某段描述不清晰
+  - type: textarea
+    id: improvement
+    attributes:
+      label: 你希望如何改进？
+      placeholder: 举例说明更好的呈现方式、补充案例、增加背景知识等
+  - type: input
+    id: time_cost
+    attributes:
+      label: 学习用时（选填）
+      placeholder: 例如：总计约 6 小时
+  - type: textarea
+    id: other
+    attributes:
+      label: 其他想说的话（选填）
+      placeholder: 欢迎分享你的收获或对作者的建议
+
+

@@ -1,0 +1,54 @@
+name: "需求建议：希望新增教程内容"
+description: "提出希望本仓库新增/扩展的教程主题或方向"
+labels: ["enhancement", "discussion"]
+title: "[需求建议] 简要概述主题/方向"
+body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 我已在 Issues 中搜索，未找到相同或高度相似的建议
+          required: true
+  - type: input
+    id: topic
+    attributes:
+      label: 希望新增的教程主题/模块
+      description: 尽量简洁、明确
+      placeholder: 例如：Agentic RAG、企业级项目
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: 背景与痛点
+      description: 为什么需要这一模块？解决哪些实际问题？
+      placeholder: 场景背景、业务需求、目前的缺口
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 建议覆盖的内容范围
+      description: 可按章节/功能点列出
+      placeholder: |
+        1. 主题概述与系统架构
+        2. 环境与数据准备
+        3. 检索/索引/生成一体化示例
+        4. 评估与监控
+  - type: textarea
+    id: audience
+    attributes:
+      label: 目标读者与预期效果
+      description: 面向人群与学完后能做什么
+      placeholder: 面向初学/进阶/生产落地；预期掌握的能力
+  - type: textarea
+    id: references
+    attributes:
+      label: 相关资料/链接（选填）
+      description: 参考项目、论文、博客、Demo 等
+      placeholder: |
+        - 论文/项目链接：...
+        - 竞品或类似教程：...
+
+

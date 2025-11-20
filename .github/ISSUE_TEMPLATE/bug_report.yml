@@ -1,0 +1,77 @@
+name: "问题反馈：代码或文档问题"
+description: "报告教程中的代码错误、文档错误、链接失效等问题"
+labels: ["bug", "needs triage"]
+title: "[问题反馈] 简要概述问题"
+body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 提交前检查
+      description: 为了提升处理效率，请先确认以下事项
+      options:
+        - label: 我已在 Issues 中搜索，未找到相同问题
+          required: true
+        - label: 我已使用仓库最新版（或 `main` 分支）进行复现
+          required: true
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: 问题类型
+      options:
+        - 代码运行错误
+        - 文档描述错误/不清晰
+        - 链接失效/资源缺失
+        - 依赖/环境问题
+        - 其他
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: 位置（章节/文件路径）
+      description: 如 `docs/chapter4/11_hybrid_search.md` 或 `code/C8/main.py`
+      placeholder: 请输入章节编号、文档路径或代码相对路径
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 请清晰说明问题表现与期望行为
+      placeholder: 实际结果 vs 期望结果
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 复现步骤
+      description: 清晰的复现步骤有助于快速定位
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+  - type: textarea
+    id: minimal_code
+    attributes:
+      label: 最小可复现代码/命令
+      description: 请尽量提供最小复现片段，或给出命令行
+      render: shell
+      placeholder: |
+        python code/C8/main.py --config ...
+  - type: textarea
+    id: env
+    attributes:
+      label: 环境信息
+      description: 操作系统、Python/Node 版本、依赖版本等
+      placeholder: |
+        OS: Windows 11 22631
+        Python: 3.10.x
+        依赖: langchain==..., llama-index==...
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志/报错信息与截图
+      description: 可粘贴报错文本或上传截图
+      render: bash
+
+

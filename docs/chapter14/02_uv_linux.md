@@ -390,7 +390,7 @@ sudo journalctl -u ner_api -f
 curl -X POST "http://<服务器公网IP>:8000/predict/ner" -H "Content-Type: application/json" -d "{\"text\":\"患者自述发热、咳嗽，伴有轻微头痛。\"}"
 ```
 
-> **注意**：在 Windows PowerShell 中，`curl` 是 `Invoke-WebRequest` 命令的别名，其参数格式与标准 `curl` 不同，直接运行以上命令会报错。推荐在 `cmd` 或 `bash` 环境（如 Git Bash）中执行此命令。
+> 在 Windows PowerShell 中，`curl` 是 `Invoke-WebRequest` 命令的别名，其参数格式与标准 `curl` 不同，直接运行以上命令会报错。推荐在 `cmd` 或 `bash` 环境（如 Git Bash）中执行此命令。
 
 <p align="center">
   <img src="./images/12_2_12.png" width="80%" alt="curl 测试云端服务" />
