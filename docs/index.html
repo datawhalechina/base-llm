@@ -109,6 +109,13 @@
             border-color: #42b883;
             box-shadow: 0 0 0 2px rgba(66, 184, 131, 0.2);
         }
+        /* 修复表格渲染问题：恢复表格的默认布局行为，覆盖 docsify 默认的 display: block */
+        .markdown-section table {
+            display: table;
+            width: auto;
+            max-width: 100%;
+            table-layout: auto;
+        }
     </style>
 </head>
 
@@ -340,6 +347,29 @@
     <script src="//cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js"></script>
     <script src="//unpkg.com/docsify-mermaid@latest/dist/docsify-mermaid.js"></script>
     <script>mermaid.initialize({ startOnLoad: true });</script>
+
+    <!-- gitalk for comments -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/gitalk.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script>
+        const gitalk = new Gitalk({
+            clientID: 'Ov23liucOGaSxjt7yuia',
+            clientSecret: 'e71c49cb01c1e97f80de2afb0bb04cde24640118',
+            repo: 'base-nlp',
+            owner: 'datawhalechina',
+            admin: ['datawhalechina', 'FutureUnreal'],
+            title: location.hash.match(/#(.*?)([?]|$)/)[1],
+            id: location.hash.match(/#(.*?)([?]|$)/)[1],
+            distractionFreeMode: false
+        })
+        // 监听URL中hash的变化，如果发现换了一个MD文件，那么刷新页面，解决整个网站使用一个gitalk评论issues的问题。
+        window.onhashchange = function (event) {
+            if (event.newURL.split('?')[0] !== event.oldURL.split('?')[0]) {
+                location.reload()
+            }
+        }
+    </script>
 
 </body>
 
