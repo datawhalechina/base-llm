@@ -45,7 +45,7 @@ Seq2Seq 架构借鉴了自编码器的结构，但对其核心目标进行了关
 在最初基于 Seq2Seq 架构的模型中，编码器和解码器通常都由 RNN 或其变体（如 LSTM、GRU）构成。图 4-1 以“I love you” -> “我爱你”的翻译任务为例，展示了一个基于 LSTM 的 Seq2Seq 架构如何将编码、解码与自回归机制结合在一起的完整工作流程。
 
 <div align="center">
-  <img src="./images/4_1_1.svg" width="90%" alt="Seq2Seq详细工作流程" />
+  <img src="./images/4_1_1.svg" width="80%" alt="Seq2Seq详细工作流程" />
   <p>图 4-1 Seq2Seq 详细工作流程</p>
 </div>
 
