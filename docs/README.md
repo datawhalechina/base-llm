@@ -97,8 +97,9 @@
     - [x] [BERT 结构及应用](./chapter5/13_Bert.md)
     - [x] [GPT 结构及应用](./chapter5/14_GPT.md)
     - [x] [T5 结构及应用](./chapter5/15_T5.md)
+    - [x] [Hugging Face 生态与核心库](./chapter5/16_HuggingFace.md)
 - **第6章：深入大模型架构**
-    - [x] [手搓一个大模型](./chapter6/16_handcraft_llama2.md)
+    - [x] [手搓一个大模型](./chapter6/17_handcraft_llama2.md)
     - [ ] [MOE 架构解析]
 
 ### 第二部分：实战篇

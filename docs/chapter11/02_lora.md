@@ -23,7 +23,7 @@ LoRA 的工作方式可以理解为在原始的预训练权重 $W_0$ 旁边，�
 2. **旁路**：输入 $x$ 依次通过两个低秩矩阵 $A$ 和 $B$。矩阵 $A$ 先将输入维度从 $k$ “压缩”到一个很小的秩 $r$，然后再由矩阵 $B$ “解压”回输出维度 $d$。
 
 <p align="center">
-  <img src="./images/11_2_1.svg" width="55%" alt="LoRA 结构" />
+  <img src="./images/11_2_1.svg" width="50%" alt="LoRA 结构" />
   <br />
   <em>图 11-7 LoRA 结构示意图</em>
 </p>
