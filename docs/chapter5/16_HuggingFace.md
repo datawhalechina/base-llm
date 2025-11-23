@@ -1,3 +1,9 @@
+# 第四节 Hugging Face 生态与核心库
+
+我们在前面的学习中简单尝试了 BERT、GPT 和 T5 三大模型的应用。可以发现，无论使用哪种架构，都离不开一个核心工具库——**Hugging Face Transformers**。
+
+如今，Hugging Face 已经从一家 NLP 初创公司演变为 **AI 时代的基础设施**。它构建了一个涵盖模型开发全生命周期的完整生态系统——从数据获取、模型开发、训练微调到最终的评估与部署。本节将深入剖析 Hugging Face 的生态构成，并以 **Transformers** 库为核心，结合 **Datasets** 和 **Tokenizers**，展示现代化模型开发链路。
+
 ## 一、Hugging Face 生态全景
 
 Hugging Face 的生态系统可以看作是由**核心软件库**、**协作平台**和**辅助工具** 共同构成的有机整体。
