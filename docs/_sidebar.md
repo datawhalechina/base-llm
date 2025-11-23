@@ -17,7 +17,7 @@
         - [BERT 结构及应用](chapter5/13_Bert.md)
         - [GPT 结构及应用](chapter5/14_GPT.md)
         - [T5 结构及应用](chapter5/15_T5.md)
-        - [Hugging Face 库详解](chapter5/16_HuggingFace.md)
+        - [Hugging Face 生态与核心库](chapter5/16_HuggingFace.md)
     - **第6章：深入大模型架构**
         - [手搓一个大模型](chapter6/17_handcraft_llama2.md)
 

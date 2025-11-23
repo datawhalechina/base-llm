@@ -1,12 +1,11 @@
-# 第四节 Hugging Face 生态与核心库
-
-我们在前面的学习中简单尝试了 BERT、GPT 和 T5 三大模型的应用。可以发现，无论使用哪种架构，都离不开一个核心工具库——**Hugging Face Transformers**。
-
-如今，Hugging Face 已经从一家 NLP 初创公司演变为 **AI 时代的基础设施**。它构建了一个涵盖模型开发全生命周期的完整生态系统——从数据获取、模型开发、训练微调到最终的评估与部署。本节将深入剖析 Hugging Face 的生态构成，并以 **Transformers** 库为核心，结合 **Datasets** 和 **Tokenizers**，展示现代化模型开发链路。
-
 ## 一、Hugging Face 生态全景
 
 Hugging Face 的生态系统可以看作是由**核心软件库**、**协作平台**和**辅助工具** 共同构成的有机整体。
+
+<div align="center">
+  <img src="images/5_4_1.png" width="90%" alt="Hugging Face 官网" />
+  <p>图 5-7 Hugging Face 官网</p>
+</div>
 
 ### 1.1 Hugging Face Hub
 
@@ -20,16 +19,16 @@ Hugging Face 的生态系统可以看作是由**核心软件库**、**协作平�
 
 在开发层面，以下三个开源库构成了生态系统的技术基石：
 
-1.  **Transformers**: 生态系统的引擎。提供统一的 API 来下载、加载和使用预训练模型。
-2.  **Tokenizers**: 连接文本与模型的桥梁。底层由 **Rust** 编写，提供极致的文本处理速度（Fast Tokenizers），并与 Transformers 无缝集成。
-3.  **Datasets**: 数据处理的加速器。提供标准化的接口来加载、处理和管理大型数据集，内置高效的内存映射机制。
+1.  **Transformers**: 生态系统的引擎。提供统一的 API 来下载、加载和使用预训练模型 [^1]。
+2.  **Tokenizers**: 连接文本与模型的桥梁。底层由 **Rust** 编写，提供极致的文本处理速度（Fast Tokenizers），并与 Transformers 无缝集成 [^2]。
+3.  **Datasets**: 数据处理的加速器。提供标准化的接口来加载、处理和管理大型数据集，内置高效的内存映射机制 [^3]。
 
 ### 1.3 辅助工具
 
 为了应对更复杂的开发需求，生态中还包含了一系列强大的辅助库：
 
 *   **Accelerate**: 简化分布式训练。让同一套代码可以无缝运行在 CPU、单卡 GPU、多卡 GPU 甚至 TPU 上，无需手动处理复杂的分布式逻辑。
-*   **Evaluate**: 标准化的模型评估框架。提供数十种常用的评估指标（如 Accuracy, F1, BLEU, ROUGE）。
+*   **Evaluate**: 标准化的模型评估框架。提供数十种常用的评估指标（如 Accuracy, F1, BLEU, ROUGE） [^4]。
 *   **Diffusers**: 专注于生成式 AI（如 Stable Diffusion）的库。
 *   **PEFT**: 参数高效微调库（Parameter-Efficient Fine-Tuning），支持 LoRA 等前沿微调技术。
 
@@ -59,7 +58,7 @@ Hugging Face 的生态系统可以看作是由**核心软件库**、**协作平�
     # 图像分类示例（显式指定小模型 apple/mobilevit-small）
     # pip install pillow
     vision_classifier = pipeline(model="apple/mobilevit-small")
-    result = vision_classifier("./cat.jpg")
+    result = vision_classifier("https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/coco_sample.png")
     result
     ```
 
@@ -67,7 +66,7 @@ Hugging Face 的生态系统可以看作是由**核心软件库**、**协作平�
 
 当深入定制模型时，我们需要手动加载模型。**`AutoClass`**（如 `AutoTokenizer`, `AutoModel`, `AutoConfig`）是库设计的精髓。
 
-它的作用是 **根据 Checkpoint 名称，自动推断并加载正确的模型架构**。例如，调用 `AutoModel.from_pretrained("bert-base-chinese")` 时，库会自动识别这是 BERT 架构，并实例化 `BertModel` 类。
+它的作用是**根据 Checkpoint 名称，自动推断并加载正确的模型架构**。例如，调用 `AutoModel.from_pretrained("bert-base-chinese")` 时，库会自动识别这是 BERT 架构，并实例化 `BertModel` 类。
 
 *   **`from_pretrained`**: 加载接口。既支持从 Hub 在线下载，也支持从本地目录加载。
 *   **`save_pretrained`**: 保存接口。将模型权重、配置和词表保存到本地。
@@ -98,7 +97,7 @@ tensor([[ 101,  100,  100, 6375,  100, 1359, 2533, 5042, 1296,  102]])
 
 输出的 Tensor 就是分词后的 **Token IDs**。其中 `101` 是 BERT 特有的起始标记 `[CLS]`，`102` 是结束标记 `[SEP]`。
 中间的数字对应文本 "Hugging Face 让 NLP 变得简单" 的词表索引：
-*   `100` (UNK/Mask): 对应英文单词 `Hugging`、`Face`、`NLP`（bert-base-chinese 词表未包含这些英文词，故映射为 `[UNK]` 或特定 ID）。
+*   `100`：对应特殊标记 `[UNK]`（未知词）。由于 bert-base-chinese 词表未包含英文单词 `Hugging`、`Face`、`NLP`，它们都会被映射为 `[UNK]`。
 *   `6375`: "让"
 *   `1359`: "变"
 *   `2533`: "得"
@@ -116,7 +115,7 @@ logits = outputs.logits
 tensor([[0.2436, 0.1208]], grad_fn=<AddmmBackward0>)
 ```
 
-模型输出的 `logits` 是未归一化的数值。可以看到输出是一个 `[1, 2]` 的张量，分别对应两个类别（负面/正面）的原始得分。
+模型输出的 `logits` 是未归一化的数值。可以看到输出是一个 `[1, 2]` 的张量，在一个二分类任务中通常可以理解为两个类别（例如“负面/正面”）的原始得分。这里我们主要演示前向推理流程；在实际应用中，需要在标注数据上对模型进行微调（或直接加载已经在下游任务上微调好的权重），这两个维度才会对应具体语义的类别标签。
 
 ```python
 # 3. Post-processing: Logits -> 概率
@@ -266,7 +265,7 @@ DistilBertForSequenceClassification(
 )
 ```
 
-通过打印模型对象可以看到完整的网络结构。注意最后的 `classifier` 层，其 `out_features=2` 对应我们在加载时设置的 `num_labels=2`，这表明模型已经被正确初始化为二分类任务。
+打印模型对象可以看到其完整的网络结构。注意最后的 `classifier` 层，其 `out_features=2` 对应我们在加载时设置的 `num_labels=2`，这表明模型已经被正确初始化为二分类任务。
 
 ```python
 # 2. 配置参数
@@ -319,6 +318,30 @@ trainer = Trainer(
 trainer.train()
 ```
 
+## 本章小结
+
+本章我们探索了预训练语言模型的三大主流技术路线及其工程实践：
+
+*   **BERT（理解）**：基于 **Transformer Encoder** 结构，主要通过 **MLM（掩码语言建模）**（以及 NSP 等）任务学习双向上下文表示。BERT 及其变体（RoBERTa、ALBERT）在文本分类、序列标注等**自然语言理解**任务上表现出色，是解决此类问题的经典方案。
+*   **GPT（生成）**：基于 **Transformer Decoder** 结构，通过 **自回归** 预测下一个词。GPT 系列模型不仅在**自然语言生成（NLG）** 上表现优异，更通过 GPT-3 系统性展示了**提示工程**和**上下文学习**的潜力，在实践层面推动了现代大语言模型的发展。
+*   **T5（统一）**：回归 **Encoder-Decoder** 经典架构，提出了 **“Text-to-Text”（万物皆文本）** 的统一框架。T5 证明通过将不同任务（翻译、分类、回归）统一为文本生成的形式，可以用一个模型解决多种 NLP 问题。
+*   **Hugging Face 实战**：本章还详细介绍了 NLP 领域的标准工具——**Hugging Face**。通过 **Transformers**（模型）、**Tokenizers**（分词）、**Datasets**（数据） 和 **Evaluate**（评估）这四大核心库，开发者能够以极低的代码量，高效地复现和应用现代 NLP 模型。
+
+从理论原理到工具实践，本章构建了使用预训练模型的完整知识体系。在下一章中，将进一步深入底层，探索如何从零开始构建一个类 LLaMA 的大模型结构。
+
 ## 练习
 
-- 尝试将之前实现的文本分类模型，从基于 `Word2Vec` 和 `LSTM` 的结构，迁移为使用 `BERT` 模型进行微调。对比分析两者在模型构建、训练流程以及最终性能上的异同。
+- 尝试将之前实现的文本分类模型，从基于 `Word2Vec` 和 `LSTM` 的结构，迁移为使用 `BERT` 模型进行微调。对比分析两者在
+模型构建、训练流程以及最终性能上的异同。（可以参考[微调 BERT 模型进行文本分类](https://github.com/datawhalechina/base-nlp/blob/main/docs/chapter7/01_text_classification.md)）
+
+---
+
+## 参考文献
+
+[^1]: [Hugging Face. *Transformers Documentation*.](https://huggingface.co/docs/transformers/index)
+
+[^2]: [Hugging Face. *Tokenizers Documentation*.](https://huggingface.co/docs/tokenizers/index)
+
+[^3]: [Hugging Face. *Datasets Documentation*.](https://huggingface.co/docs/datasets/index)
+
+[^4]: [Hugging Face. *Evaluate Documentation*.](https://huggingface.co/docs/evaluate/index)
