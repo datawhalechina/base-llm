@@ -121,7 +121,7 @@
     - [x] [Qwen2.5 微调私有数据](./chapter11/04_qwen2.5_qlora.md)
 - **第2章：高级微调技术**
     - [x] [RLHF 技术详解](./chapter12/01_rlhf.md)
-    - [ ] [基于 Llama Factory 的微调实战](./chapter12/02_llama_factory.md)
+    - [x] [LLaMA-Factory RLHF（DPO）实战](./chapter12/02_llama_factory.md)
 - **第3章：大模型训练与量化**
     - [ ] [Deepspeed 框架介绍](./chapter12/01_deepspeed.md)
     - [ ] [AWQ 模型量化实战](./chapter12/02_awg.md)

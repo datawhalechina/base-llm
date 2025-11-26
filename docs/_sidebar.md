@@ -40,7 +40,7 @@
         - [Qwen2.5 微调私有数据](chapter11/04_qwen2.5_qlora.md)
     - **第2章：高级微调技术**
         - [RLHF 技术详解](chapter12/01_RLHF.md)
-        - [LLaMA-Factory RLHF（DPO）实战](chapter12/02_llama_factory_rlhf.md)
+        - [LLaMA-Factory RLHF（DPO）实战](chapter12/02_llama_factory.md)
 
 - **第四部分：应用部署篇**
     - **第1章：模型服务部署**
