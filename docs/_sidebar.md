@@ -13,7 +13,7 @@
         - [Seq2Seq 架构](chapter4/10_seq2seq.md)
         - [注意力机制](chapter4/11_attention.md)
         - [深入解析 Transformer](chapter4/12_transformer.md)
-    - **第5章：语言模型**
+    - **第5章：预训练模型**
         - [BERT 结构及应用](chapter5/13_Bert.md)
         - [GPT 结构及应用](chapter5/14_GPT.md)
         - [T5 结构及应用](chapter5/15_T5.md)
