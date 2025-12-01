@@ -262,7 +262,7 @@ class MultiHeadSelfAttention(nn.Module):
 理解了自注意力和多头注意力之后，就可以从一个更高的视角来审视 Transformer 的整体结构了。通过图 4-3 可以看出它依然是一个 Encoder-Decoder 架构，但其内部是由几个标准化的“积木”堆叠而成的。
 
 <div align="center">
-    <img src="./images/4_3_1.svg" width="60%" alt="Transformer 架构" />
+    <img src="./images/4_3_1.svg" width="40%" alt="Transformer 架构" />
     <p>图 4-3 Transformer 架构</p>
 </div>
 
