@@ -1,50 +1,55 @@
 - **第一部分：理论篇**
-    - **第1章：NLP简介**
+    - **第 1 章：NLP简介**
         - [NLP 概述](chapter1/01_nlp_intro.md)
-    - **第2章：文本表示与词向量**
+    - **第 2 章：文本表示与词向量**
         - [初级分词技术](chapter2/03_tokenization.md)
         - [词向量表示](chapter2/04_word_vector.md)
         - [从主题模型到 Word2Vec](chapter2/05_Word2Vec.md)
         - [基于 Gensim 的词向量实战](chapter2/06_gensim.md)
-    - **第3章：循环神经网络**
+    - **第 3 章：循环神经网络**
         - [循环神经网络](chapter3/08_RNN.md)
         - [LSTM 与 GRU](chapter3/09_LSTM&GRU.md)
-    - **第4章：注意力机制与Transformer**
+    - **第 4 章：注意力机制与Transformer**
         - [Seq2Seq 架构](chapter4/10_seq2seq.md)
         - [注意力机制](chapter4/11_attention.md)
         - [深入解析 Transformer](chapter4/12_transformer.md)
-    - **第5章：预训练模型**
+    - **第 5 章：预训练模型**
         - [BERT 结构及应用](chapter5/13_Bert.md)
         - [GPT 结构及应用](chapter5/14_GPT.md)
         - [T5 结构及应用](chapter5/15_T5.md)
         - [Hugging Face 生态与核心库](chapter5/16_HuggingFace.md)
-    - **第6章：深入大模型架构**
+    - **第 6 章：深入大模型架构**
         - [手搓一个大模型](chapter6/17_handcraft_llama2.md)
         - [MoE 架构解析](chapter6/18_MoE.md)
 
 - **第二部分：实战篇**
-    - **第1章：文本分类**
+    - **第 1 章：文本分类**
         - [文本分类简单实现](chapter7/01_text_classification.md)
         - [基于 LSTM 的文本分类](chapter7/02_lstm_text_classification.md)
         - [微调 BERT 模型进行文本分类](chapter7/03_bert_text_classification.md)
-    - **第2章：命名实体识别**
+    - **第 2 章：命名实体识别**
         - [命名实体识别概要](chapter8/01_named_entity_recognition.md)
         - [NER 项目的数据处理](chapter8/02_data_processing.md)
         - [模型构建、训练与推理](chapter8/03_model_building_and_training.md)
         - [模型的推理与优化](chapter8/04_evaluation_and_prediction.md)
 
 - **第三部分：微调量化篇**
-    - **第1章：参数高效微调**
+    - **第 1 章：参数高效微调**
         - [PEFT 技术综述](chapter11/01_PEFT.md)
         - [LoRA 方法详解](chapter11/02_lora.md)
         - [基于 peft 库的 LoRA 实战](chapter11/03_peft_lora.md)
         - [Qwen2.5 微调私有数据](chapter11/04_qwen2.5_qlora.md)
-    - **第2章：高级微调技术**
+    - **第 2 章：高级微调技术**
         - [RLHF 技术详解](chapter12/01_RLHF.md)
         - [LLaMA-Factory RLHF（DPO）实战](chapter12/02_llama_factory.md)
 
 - **第四部分：应用部署篇**
-    - **第1章：模型服务部署**
+    - **第 1 章：模型服务部署**
         - [FastAPI 模型部署实战](chapter14/01_fastapi.md)
         - [云服务器模型部署实战](chapter14/02_uv_linux.md)
         - [使用 Docker Compose 部署模型服务](chapter14/03_docker_deploy.md)
+
+
+- **第五部分：大模型安全**
+    - **第 1 章：安全全景与威胁建模**
+        - [x] [大模型安全总览](./docs/chapter16/01_LLM_safety_overview.md)
