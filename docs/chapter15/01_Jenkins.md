@@ -416,14 +416,14 @@ git reflog
 
 `git reflog` 会记录 **HEAD 的每一次移动**（包括 `commit`、`reset`、`checkout` 等），输出如下：
 
-> 和 `git log` 一样，`git reflog` 的输出通常会通过分页器 `less` 展示，可以使用空格翻页、方向键上下滚动，按 `q` 退出查看界面返回命令行。
-
 ```bash
 3fa5369 (HEAD -> master) HEAD@{0}: reset: moving to 3fa5369
 7db0bb0 HEAD@{1}: reset: moving to HEAD^
 3fa5369 (HEAD -> master) HEAD@{2}: commit: v2: update print output
 7db0bb0 HEAD@{3}: commit (initial): first commit: add test.py
 ```
+
+> 和 `git log` 一样，`git reflog` 的输出通常会通过分页器 `less` 展示，可以使用空格翻页、方向键上下滚动，按 `q` 退出查看界面返回命令行。
 
 这四行依次记录了我们刚才做过的操作：
 
