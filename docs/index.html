@@ -328,6 +328,21 @@
                             // 忽略整体处理失败，避免影响页面其他功能
                         }
                     });
+                },
+                // 将 giscus 评论区域插入到文档正文底部，使其不再“悬浮”在内容之外
+                function(hook, vm) {
+                    hook.doneEach(function() {
+                        try {
+                            var giscus = document.getElementById('giscus_thread');
+                            var markdown = document.querySelector('.content .markdown-section');
+                            if (!giscus || !markdown) return;
+                            if (giscus.parentNode !== markdown) {
+                                markdown.appendChild(giscus);
+                            }
+                        } catch (e) {
+                            // 忽略错误，避免影响其他功能
+                        }
+                    });
                 }
             ]
         }
