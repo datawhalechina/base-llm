@@ -411,9 +411,6 @@
                 } catch (_) { /* ignore */ }
             }
 
-            var lastRoute = (location.hash && location.hash.startsWith('#/')) ? location.hash : '#/';
-            dlog('init', { href: location.href, hash: location.hash, lastRoute: lastRoute });
-
             function isGiscusAnchorHash(hash) {
                 if (!hash) return false;
                 // giscus 登录 / 回跳时可能会把 hash 设置为容器 id（带不带 "/"" 都可能）
@@ -427,6 +424,33 @@
                     hash.startsWith('#comments?') ||
                     hash.startsWith('#/comments?');
             }
+
+            // 记录并跨刷新保存“上一次正常 docsify 路由”，用于 giscus OAuth 回跳后恢复到原页面
+            function getStoredRoute() {
+                try { return sessionStorage.getItem('docsify:lastRoute') || ''; } catch (_) { return ''; }
+            }
+            function setStoredRoute(route) {
+                try { sessionStorage.setItem('docsify:lastRoute', route); } catch (_) { /* ignore */ }
+            }
+
+            var initialHash = location.hash || '';
+            var storedRoute = getStoredRoute();
+            var lastRoute = (initialHash && initialHash.startsWith('#/')) ? initialHash : (storedRoute && storedRoute.startsWith('#/') ? storedRoute : '#/');
+
+            // 关键：在 docsify 初始化前就处理 giscus 回跳 hash，避免 docsify 把它当作路由去请求 *.md
+            if (isGiscusAnchorHash(initialHash)) {
+                dlog('pre-normalize giscus hash before docsify', { initialHash: initialHash, restoreTo: lastRoute, href: location.href });
+                try {
+                    history.replaceState(null, '', location.pathname + location.search + lastRoute);
+                } catch (_) { /* ignore */ }
+                // 注意：replaceState 不触发 hashchange，但会让 docsify 读到正确的 #/ 路由
+            }
+
+            // 初始化时也存一次（防止首次访问时 storedRoute 为空）
+            if (lastRoute && lastRoute.startsWith('#/')) {
+                setStoredRoute(lastRoute);
+            }
+            dlog('init', { href: location.href, hash: location.hash, lastRoute: lastRoute, storedRoute: storedRoute });
 
             // 记录窗口焦点变化，方便判断“点登录”时是否弹出/跳转
             window.addEventListener('blur', function () { dlog('window blur'); }, true);
@@ -480,6 +504,7 @@
 
                     if (h.startsWith('#/')) {
                         lastRoute = h;
+                        setStoredRoute(lastRoute);
                         dlog('update lastRoute', lastRoute);
                         return;
                     }
