@@ -374,10 +374,10 @@
                             
                             container.appendChild(script);
                             
-                            // 插入到 main 元素的最后，而不是 .markdown-section 里
-                            var main = document.querySelector('main');
-                            if (main) {
-                                main.appendChild(container);
+                            // 插入到 .content 元素的最后（在 .markdown-section 的外面，但在内容区域内）
+                            var content = document.querySelector('.content');
+                            if (content) {
+                                content.appendChild(container);
                             }
                         } catch (e) {
                             console.error('giscus 加载失败:', e);
