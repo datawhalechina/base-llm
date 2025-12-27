@@ -117,10 +117,16 @@
             table-layout: auto;
         }
         /* giscus 评论区域样式 */
-        #giscus_thread {
-            max-width: 860px;
-            margin: 2rem auto;
-            padding: 0 15px;
+        #giscus-container {
+            width: 100%;
+            margin-top: 3rem;
+        }
+        #giscus-container .giscus {
+            width: 100%;
+        }
+        #giscus-container .giscus-frame {
+            width: 100%;
+            border: none;
         }
     </style>
 </head>
@@ -345,7 +351,7 @@
                             // 创建新的 giscus 容器
                             var container = document.createElement('div');
                             container.id = 'giscus-container';
-                            container.style.marginTop = '3rem';
+                            container.className = 'giscus';
                             
                             // 创建 giscus 脚本
                             var script = document.createElement('script');
@@ -361,7 +367,6 @@
                             script.setAttribute('data-input-position', 'top');
                             script.setAttribute('data-theme', 'preferred_color_scheme');
                             script.setAttribute('data-lang', 'zh-CN');
-                            script.setAttribute('data-loading', 'lazy');
                             script.crossOrigin = 'anonymous';
                             script.async = true;
                             
