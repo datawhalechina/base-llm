@@ -329,30 +329,26 @@
                         }
                     });
                 },
-                // 将 giscus 评论区域插入到文档正文底部，并支持 SPA 无刷新切换
+                // giscus 评论插件：在每个页面底部动态加载评论区
                 function(hook, vm) {
                     hook.doneEach(function() {
-                        var giscusContainer = document.getElementById('giscus-container');
-                        
-                        // 如果容器不存在（首次加载），创建它
-                        if (!giscusContainer) {
-                            giscusContainer = document.createElement('div');
-                            giscusContainer.id = 'giscus-container';
-                            giscusContainer.className = 'giscus';
-                            giscusContainer.style.marginTop = '3rem'; // 与正文拉开一点间距
-                        }
-
-                        // 将容器追加到正文末尾（.markdown-section）
-                        var markdown = document.querySelector('.content .markdown-section');
-                        if (markdown) {
-                            markdown.appendChild(giscusContainer);
-                        }
-
-                        // 检查是否已经加载过脚本
-                        var existingScript = document.getElementById('giscus-script');
-                        if (!existingScript) {
+                        try {
+                            var markdown = document.querySelector('.markdown-section');
+                            if (!markdown) return;
+                            
+                            // 移除旧的 giscus 容器（如果存在）
+                            var oldContainer = document.getElementById('giscus-container');
+                            if (oldContainer) {
+                                oldContainer.remove();
+                            }
+                            
+                            // 创建新的 giscus 容器
+                            var container = document.createElement('div');
+                            container.id = 'giscus-container';
+                            container.style.marginTop = '3rem';
+                            
+                            // 创建 giscus 脚本
                             var script = document.createElement('script');
-                            script.id = 'giscus-script';
                             script.src = 'https://giscus.app/client.js';
                             script.setAttribute('data-repo', 'datawhalechina/base-nlp');
                             script.setAttribute('data-repo-id', 'R_kgDOPgR-bQ');
@@ -366,27 +362,42 @@
                             script.setAttribute('data-theme', 'preferred_color_scheme');
                             script.setAttribute('data-lang', 'zh-CN');
                             script.setAttribute('data-loading', 'lazy');
-                            script.setAttribute('crossorigin', 'anonymous');
+                            script.crossOrigin = 'anonymous';
                             script.async = true;
-                            giscusContainer.appendChild(script);
-                        } else {
-                            // 如果 iframe 已经存在，通过 postMessage 通知 giscus 更新页面 URL
-                            var iframe = document.querySelector('iframe.giscus-frame');
-                            if (iframe && iframe.contentWindow) {
-                                iframe.contentWindow.postMessage({
-                                    giscus: {
-                                        setConfig: {
-                                            term: window.location.href // 使用当前完整 URL（含 hash）作为新的映射键
-                                        }
-                                    }
-                                }, 'https://giscus.app');
-                            }
+                            
+                            container.appendChild(script);
+                            markdown.appendChild(container);
+                        } catch (e) {
+                            console.error('giscus 加载失败:', e);
                         }
                     });
                 }
             ]
         }
     </script>
+    <!-- Put them above docsify.min.js -->
+    <script src="//cdn.jsdelivr.net/npm/docsify@latest/lib/docsify.min.js"></script>
+    <!-- 搜索功能 -->
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+    <!-- code render-->
+    <script src="//cdn.jsdelivr.net/npm/prismjs@latest/components/prism-bash.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@latest/components/prism-python.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-pagination@latest/dist/docsify-pagination.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked@3"></script>
+    <!-- CDN files for docsify-katex -->
+    <script src="//cdn.jsdelivr.net/npm/docsify-katex@latest/dist/docsify-katex.js"></script>
+    <!-- 字数统计 -->
+    <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
+    <!-- Mermaid -->
+    <script src="//cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js"></script>
+    <script src="//unpkg.com/docsify-mermaid@latest/dist/docsify-mermaid.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true });</script>
+
+    <!-- giscus 评论系统已通过 docsify 插件动态加载，无需在此处添加静态代码 -->
 
 </body>
 
