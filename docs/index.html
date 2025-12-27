@@ -117,14 +117,14 @@
             table-layout: auto;
         }
         /* giscus 评论区域样式 */
-        #giscus-container {
+        #docsify-giscus-comments {
             width: 100%;
             margin-top: 3rem;
         }
-        #giscus-container .giscus {
+        #docsify-giscus-comments .giscus {
             width: 100%;
         }
-        #giscus-container .giscus-frame {
+        #docsify-giscus-comments .giscus-frame {
             width: 100%;
             border: none;
         }
@@ -343,14 +343,14 @@
                             if (!markdown) return;
                             
                             // 移除旧的 giscus 容器（如果存在）
-                            var oldContainer = document.getElementById('giscus-container');
+                            var oldContainer = document.getElementById('docsify-giscus-comments');
                             if (oldContainer) {
                                 oldContainer.remove();
                             }
                             
                             // 创建新的 giscus 容器
                             var container = document.createElement('div');
-                            container.id = 'giscus-container';
+                            container.id = 'docsify-giscus-comments';
                             container.className = 'giscus';
                             
                             // 创建 giscus 脚本
