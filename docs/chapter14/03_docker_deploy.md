@@ -14,9 +14,9 @@
 
 Docker 的核心概念包括：
 
--   **镜像 (Image)**: 一个只读的模板，用于创建容器。它像一个“安装包”，其中包含了运行应用所需的一切，如代码、一个迷你的操作系统以及所有依赖库。以我们的 NER 项目为例，可以基于一个包含 Python 3.10 的官方镜像，再打包进相关的代码和依赖。
--   **容器 (Container)**: 镜像的运行实例。容器是轻量级的，因为它与宿主机共享操作系统内核，启动速度极快，资源占用也远小于传统虚拟机。每个容器都运行在自己独立、隔离的环境中。
--   **Dockerfile**: 一个文本文档，包含了一系列指令，用于告诉 Docker 如何自动构建一个镜像。例如，从哪个基础镜像开始，需要安装哪些软件，复制哪些文件，以及容器启动时要执行什么命令。
+- **镜像 (Image)**: 一个只读的模板，用于创建容器。它像一个“安装包”，其中包含了运行应用所需的一切，如代码、一个迷你的操作系统以及所有依赖库。以我们的 NER 项目为例，可以基于一个包含 Python 3.10 的官方镜像，再打包进相关的代码和依赖。
+- **容器 (Container)**: 镜像的运行实例。容器是轻量级的，因为它与宿主机共享操作系统内核，启动速度极快，资源占用也远小于传统虚拟机。每个容器都运行在自己独立、隔离的环境中。
+- **Dockerfile**: 一个文本文档，包含了一系列指令，用于告诉 Docker 如何自动构建一个镜像。例如，从哪个基础镜像开始，需要安装哪些软件，复制哪些文件，以及容器启动时要执行什么命令。
 
 ### 1.2 为何选择 Docker Compose？
 
@@ -25,9 +25,9 @@ Docker 的核心概念包括：
 **Docker Compose** 就是 Docker 官方提供的解决方案。它是一个用于定义和运行多容器 Docker 应用的工具。通过一个名为 `docker-compose.yml` 的 YAML 文件，可以配置应用所需的所有服务。然后，只需一个简单的命令 `docker compose up`，就能够根据配置文件创建并启动所有服务。
 
 对于我们当前的单个 NER API 服务，使用 Docker Compose 也能带来诸多好处：
--   **配置集中化**: 将所有部署相关的参数（如构建指令、端口映射、重启策略）都写在一个文件中，一目了然。
--   **命令简化**: 将冗长的 `docker run` 命令简化为 `docker compose up`，更易于记忆和使用。
--   **易于扩展**: 将来若需增加数据库等新服务，仅需在配置文件中添加几行即可。
+- **配置集中化**: 将所有部署相关的参数（如构建指令、端口映射、重启策略）都写在一个文件中，一目了然。
+- **命令简化**: 将冗长的 `docker run` 命令简化为 `docker compose up`，更易于记忆和使用。
+- **易于扩展**: 将来若需增加数据库等新服务，仅需在配置文件中添加几行即可。
 
 ## 二、环境准备
 
@@ -43,57 +43,67 @@ Docker 的核心概念包括：
 
 完成后，我们就可以执行 Docker 官方提供的一键安装脚本了。这个脚本会自动检测你的 Linux 发行版，并安装最新稳定版的 Docker Engine 和 Docker Compose。
 
-1.  **执行 Docker 官方安装脚本**
-    这个脚本会自动检测你的 Linux 发行版，并安装最新稳定版的 Docker Engine 和 Docker Compose。
-    ```bash
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh
-    ```
-    > **网络问题提示**
-    > 在国内的服务器上执行 `curl` 命令时，若遇到 `Connection reset by peer` 等网络错误，**应首先检查云服务器的安全组是否已放行 443 (HTTPS) 端口的出站规则**。如果确认端口已放行但问题依旧，通常是网络链路不稳定所致，此时可以改用国内镜像源（如 DaoCloud）提供的一键安装命令：`curl -sSL https://get.daocloud.io/docker | sh`。
+（1）**执行 Docker 官方安装脚本**
 
-2.  **验证安装**
-    安装完成后，执行以下命令来检查 Docker 和 Docker Compose 是否成功安装。
-    ```bash
-    docker --version
-    docker compose version
-    ```
-    如果都能如图 14-16 正确输出版本号，说明 Docker 环境已经准备就绪。
+这个脚本会自动检测你的 Linux 发行版，并安装最新稳定版的 Docker Engine 和 Docker Compose。
 
-    <p align="center">
-      <img src="./images/14_3_1.png" width="80%" alt="验证 Docker 安装成功" />
-      <br />
-      <em>图 14-16 验证 Docker 安装成功</em>
-    </p>
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+```
 
-3.  **(可选) 配置国内镜像加速**
-    默认情况下，Docker 会从国外的 Docker Hub 拉取镜像，速度可能较慢。我们可以配置国内的镜像加速器来提升下载速度。
-    
-    创建或修改 Docker 的配置文件：
-    ```bash
-    sudo mkdir -p /etc/docker
-    sudo nano /etc/docker/daemon.json
-    ```
+> **网络问题提示**
+> 在国内的服务器上执行 `curl` 命令时，若遇到 `Connection reset by peer` 等网络错误，**应首先检查云服务器的安全组是否已放行 443 (HTTPS) 端口的出站规则**。如果确认端口已放行但问题依旧，通常是网络链路不稳定所致，此时可以改用国内镜像源（如 DaoCloud）提供的一键安装命令：`curl -sSL https://get.daocloud.io/docker | sh`。
 
-    在打开的编辑器中，粘贴以下内容（以阿里云加速器为例），然后保存并退出 (`Ctrl+X`, `Y`, `Enter`)：
-    ```json
-    {
-      "registry-mirrors": ["https://<阿里云镜像 ID>.mirror.aliyuncs.com"]
-    }
-    ```
-    > 每个阿里云用户都可以免费获取一个专属的镜像加速器地址。获取步骤如下：登录阿里云控制台后，在顶部搜索框搜索“容器镜像服务”，进入后在如图 14-17 左侧菜单的“镜像工具”下找到“镜像加速器”，即可看到专属地址。如果不想注册阿里云，也可以使用其他公开的加速器，如网易的 `https://hub-mirror.c.163.com`。
+（2）**验证安装**
+安装完成后，执行以下命令来检查 Docker 和 Docker Compose 是否成功安装。
 
-    <p align="center">
-      <img src="./images/14_3_2.png" width="80%" alt="获取阿里云镜像加速器" />
-      <br />
-      <em>图 14-17 获取阿里云镜像加速器</em>
-    </p>
+```bash
+docker --version
+docker compose version
+```
 
-    最后，重启 Docker 服务使配置生效：
-    ```bash
-    sudo systemctl daemon-reload
-    sudo systemctl restart docker
-    ```
+如果都能如图 14-16 正确输出版本号，说明 Docker 环境已经准备就绪。
+
+<p align="center">
+  <img src="./images/14_3_1.png" width="80%" alt="验证 Docker 安装成功" />
+  <br />
+  <em>图 14-16 验证 Docker 安装成功</em>
+</p>
+
+（3）**(可选) 配置国内镜像加速**
+
+默认情况下，Docker 会从国外的 Docker Hub 拉取镜像，速度可能较慢。我们可以配置国内的镜像加速器来提升下载速度。
+
+创建或修改 Docker 的配置文件：
+
+```bash
+sudo mkdir -p /etc/docker
+sudo nano /etc/docker/daemon.json
+```
+
+在打开的编辑器中，粘贴以下内容（以阿里云加速器为例），然后保存并退出 (`Ctrl+X`, `Y`, `Enter`)：
+
+```json
+{
+  "registry-mirrors": ["https://<阿里云镜像 ID>.mirror.aliyuncs.com"]
+}
+```
+
+> 每个阿里云用户都可以免费获取一个专属的镜像加速器地址。获取步骤如下：登录阿里云控制台后，在顶部搜索框搜索“容器镜像服务”，进入后在如图 14-17 左侧菜单的“镜像工具”下找到“镜像加速器”，即可看到专属地址。如果不想注册阿里云，也可以使用其他公开的加速器，如网易的 `https://hub-mirror.c.163.com`。
+
+<p align="center">
+  <img src="./images/14_3_2.png" width="80%" alt="获取阿里云镜像加速器" />
+  <br />
+  <em>图 14-17 获取阿里云镜像加速器</em>
+</p>
+
+最后，重启 Docker 服务使配置生效：
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
 
 ## 三、容器化 NER 应用
 
@@ -189,6 +199,7 @@ sudo systemctl status docker
 ### 4.3 构建并启动服务
 
 上传完成后，在服务器的终端中，进入项目目录：
+
 ```bash
 cd ner_deployment
 ```
@@ -198,9 +209,9 @@ cd ner_deployment
 ```bash
 sudo docker compose up --build -d
 ```
--   `up`: 启动服务。
--   `--build`: 强制重新构建镜像。首次运行时需要，后续如果修改了 `Dockerfile` 或项目代码也需要加上此参数。
--   `-d`: detached 模式，让服务在后台运行。
+- `up`: 启动服务。
+- `--build`: 强制重新构建镜像。首次运行时需要，后续如果修改了 `Dockerfile` 或项目代码也需要加上此参数。
+- `-d`: detached 模式，让服务在后台运行。
 
 首次执行时，我们会看到 Docker 正在一步步执行 `Dockerfile` 中的指令来构建镜像，然后启动容器。整个过程可能需要几分钟，具体时间取决于服务器网络状况和性能。
 
@@ -214,26 +225,28 @@ sudo docker compose up --build -d
 
 服务启动后，可以使用以下命令来管理它：
 
--   **查看服务状态和日志**:
-    ```bash
-    # 查看正在运行的容器
-    sudo docker compose ps
-    
-    # 实时查看服务日志
-    sudo docker compose logs -f
-    ```
+- **查看服务状态和日志**:
 
-    <p align="center">
-      <img src="./images/14_3_5.png" width="80%" alt="查看服务状态与日志" />
-      <br />
-      <em>图 14-20 查看服务状态与日志</em>
-    </p>
+  ```bash
+  # 查看正在运行的容器
+  sudo docker compose ps
+  
+  # 实时查看服务日志
+  sudo docker compose logs -f
+  ```
 
--   **停止服务**:
-    ```bash
-    sudo docker compose down
-    ```
-    此命令会停止并移除由该 `docker-compose.yml` 文件创建的容器和网络。
+  <p align="center">
+    <img src="./images/14_3_5.png" width="80%" alt="查看服务状态与日志" />
+    <br />
+    <em>图 14-20 查看服务状态与日志</em>
+  </p>
+
+- **停止服务**:
+
+  ```bash
+  sudo docker compose down
+  ```
+  此命令会停止并移除由该 `docker-compose.yml` 文件创建的容器和网络。
 
 ### 4.5 测试云端服务
 

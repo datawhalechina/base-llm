@@ -122,10 +122,14 @@ def predict(request: PredictRequest):
 ```
 
 在路径操作函数中，将参数 `request` 的类型声明为创建的 `PredictRequest` 模型。这样一来，FastAPI 就会自动完成一系列工作：
-1.  读取请求体中的 JSON 数据。
-2.  校验数据是否符合 `PredictRequest` 模型的定义（例如，`text` 字段是否存在且为字符串）。
-3.  如果校验通过，将数据转换为 `PredictRequest` 对象，赋值给 `request` 参数。
-4.  如果校验失败，FastAPI 会自动返回一个 HTTP 422 错误，并附带详细的错误信息。
+
+（1）读取请求体中的 JSON 数据。
+
+（2）校验数据是否符合 `PredictRequest` 模型的定义（例如，`text` 字段是否存在且为字符串）。
+
+（3）如果校验通过，将数据转换为 `PredictRequest` 对象，赋值给 `request` 参数。
+
+（4）如果校验失败，FastAPI 会自动返回一个 HTTP 422 错误，并附带详细的错误信息。
 
 **代码即文档且自带校验**是这种方式的核心优势。我们不再需要编写 `if 'text' not in data:` 或 `isinstance(data['text'], str)` 这样的防御性代码，因为 FastAPI 和 Pydantic 已经自动处理了上述所有数据校验和转换工作。
 
@@ -246,12 +250,16 @@ async def health_check(verbose: bool = False):
 
 这个模板包含了日志记录、参数校验、异常处理和结构化的 JSON 返回，是一个非常好的起点。我们来逐步解析一下：
 
-1.  **应用与日志配置**：在创建 `FastAPI` 实例时，传入 `title`、`description` 和 `version` 等参数，这些信息将显示在自动生成的 API 文档中。同时，我们配置了基本的日志记录。
-2.  **请求体数据模型**：与前面类似，使用 Pydantic 模型 `PredictRequest` 来定义输入数据的结构。
-3.  **预测逻辑路由**：这是 API 的核心。
-    -   在函数内部，先对输入参数进行业务层面的校验，例如检查文本是否为空。对于不合法的请求，使用 `HTTPException` 来中断执行并向客户端返回一个标准的 HTTP 错误响应。这是一种比直接 `return` 错误信息更规范的做法。
-    -   使用 `try...except` 块捕获了所有预料之外的异常。可以防止服务器因内部代码错误而崩溃，并向客户端返回一个标准的 500 内部错误，同时在服务器日志中记录详细的错误信息以供排查。
-4.  **其他辅助路由**：提供一个根路径用于返回信息，以及一个 `/health` 路径用于监控服务。`/health` 路由还包含了一个可选的布尔查询参数 `verbose`，演示了如何在模板中轻松集成查询参数。这是一个很好的工程实践。
+（1）**应用与日志配置**：在创建 `FastAPI` 实例时，传入 `title`、`description` 和 `version` 等参数，这些信息将显示在自动生成的 API 文档中。同时，我们配置了基本的日志记录。
+
+（2）**请求体数据模型**：与前面类似，使用 Pydantic 模型 `PredictRequest` 来定义输入数据的结构。
+
+（3）**预测逻辑路由**：这是 API 的核心。
+
+-   在函数内部，先对输入参数进行业务层面的校验，例如检查文本是否为空。对于不合法的请求，使用 `HTTPException` 来中断执行并向客户端返回一个标准的 HTTP 错误响应。这是一种比直接 `return` 错误信息更规范的做法。
+-   使用 `try...except` 块捕获了所有预料之外的异常。可以防止服务器因内部代码错误而崩溃，并向客户端返回一个标准的 500 内部错误，同时在服务器日志中记录详细的错误信息以供排查。
+
+（4）**其他辅助路由**：提供一个根路径用于返回信息，以及一个 `/health` 路径用于监控服务。`/health` 路由还包含了一个可选的布尔查询参数 `verbose`，演示了如何在模板中轻松集成查询参数。这是一个很好的工程实践。
 
 ## 三、部署命名实体识别模型
 
@@ -384,51 +392,53 @@ async def root():
 
 ### 3.3 启动与测试
 
-1.  **启动服务**：
-    在 `ner_deployment` 目录下，运行命令：
-    ```bash
-    uvicorn main:app --reload
-    ```
+（1）**启动服务**：
 
-2.  **使用 `curl` 测试**：
-    打开一个新的终端，发送一个 POST 请求：
+在 `ner_deployment` 目录下，运行命令：
+```bash
+uvicorn main:app --reload
+```
 
-    ```bash
-    curl -X POST "http://127.0.0.1:8000/predict/ner" -H "Content-Type: application/json" -d "{\"text\":\"患者自述发热、咳嗽，伴有轻微头痛。\"}"
-    ```
+（2）**使用 `curl` 测试**：
 
-    > 在 Windows PowerShell 中，`curl` 是 `Invoke-WebRequest` 命令的别名，它的参数格式与标准 `curl` 不同，直接运行以上命令会报错。推荐在 `cmd` 中执行此命令。
+打开一个新的终端，发送一个 POST 请求：
 
-    应该会收到类似下面的 JSON 响应（格式化后）：
+```bash
+curl -X POST "http://127.0.0.1:8000/predict/ner" -H "Content-Type: application/json" -d "{\"text\":\"患者自述发热、咳嗽，伴有轻微头痛。\"}"
+```
 
-    ```json
-    {
-        "code": 0,
-        "message": "成功",
-        "data": {
-            "text": "患者自述发热、咳嗽，伴有轻微头痛。",
-            "entities": [
-                {
-                    "text": "发热",
-                    "type": "sym",
-                    "start": 4,
-                    "end": 6
-                },
-                {
-                    "text": "咳嗽",
-                    "type": "sym",
-                    "start": 7,
-                    "end": 9
-                },
-                {
-                    "text": "头",
-                    "type": "bod",
-                    "start": 14,
-                    "end": 15
-                }
-            ]
-        }
+> 在 Windows PowerShell 中，`curl` 是 `Invoke-WebRequest` 命令的别名，它的参数格式与标准 `curl` 不同，直接运行以上命令会报错。推荐在 `cmd` 中执行此命令。
+
+应该会收到类似下面的 JSON 响应（格式化后）：
+
+```json
+{
+    "code": 0,
+    "message": "成功",
+    "data": {
+        "text": "患者自述发热、咳嗽，伴有轻微头痛。",
+        "entities": [
+            {
+                "text": "发热",
+                "type": "sym",
+                "start": 4,
+                "end": 6
+            },
+            {
+                "text": "咳嗽",
+                "type": "sym",
+                "start": 7,
+                "end": 9
+            },
+            {
+                "text": "头",
+                "type": "bod",
+                "start": 14,
+                "end": 15
+            }
+        ]
     }
-    ```
+}
+```
 
 通过这个实战案例，我们成功地将一个具体的 NLP 模型封装成了一个健壮、高效、且带有交互式文档的 API 服务。

@@ -32,11 +32,7 @@
   <em>图 14-4 阿里云 ECS 实例管理页面</em>
 </p>
 
-接下来，以阿里云为例，演示如何配置安全组并放行 8000 端口。
-
-1.  在实例管理页面的左侧导航栏中，找到并点击“网络与安全”下的“安全组”。
-
-2.  在安全组列表中，找到实例所绑定的安全组，点击右侧的“管理规则”。
+接下来，以阿里云为例，演示如何配置安全组并放行 8000 端口。先在实例管理页面的左侧导航栏中，找到并点击“网络与安全”下的“安全组”。在安全组列表中，找到实例所绑定的安全组，点击右侧的“管理规则”。
 
 <p align="center">
   <img src="./images/14_2_2.png" width="80%" alt="安全组列表页面" />
@@ -44,13 +40,11 @@
   <em>图 14-5 安全组列表页面</em>
 </p>
 
-3.  进入规则管理页面后，在“入方向”的选项下点击“增加规则”按钮。
-
-4.  如图 14-6 所示，在弹出的“新建安全组规则”窗口中，进行如下配置：
-    -   **协议类型**: 选择“自定义 TCP”。
-    -   **端口范围**: 填写 `8000`。
-    -   **授权对象**: 为了方便测试，可以设置为 `0.0.0.0/0`，这表示允许任何 IP 地址访问。出于安全考虑，更推荐的做法是仅授权给你自己的 IP 地址。
-    -   点击“提交”保存规则。
+进入规则管理页面后，在“入方向”的选项下点击“增加规则”按钮。如图 14-6 所示，在弹出的“新建安全组规则”窗口中，进行如下配置：
+- **协议类型**: 选择“自定义 TCP”。
+- **端口范围**: 填写 `8000`。
+- **授权对象**: 为了方便测试，可以设置为 `0.0.0.0/0`，这表示允许任何 IP 地址访问。出于安全考虑，更推荐的做法是仅授权给你自己的 IP 地址。
+- 点击“提交”保存规则。
 
 <p align="center">
   <img src="./images/14_2_3.png" width="80%" alt="新建安全组入方向规则" />
@@ -64,11 +58,14 @@
 
 获取到服务器的公网 IP 和登录凭证后，就可以远程连接并开始操作了。连接服务器的方式多种多样，可以根据自己的习惯和操作系统进行选择：
 
-1.  **云服务商控制台**: 大部分云服务商都提供了网页版的远程连接工具（如 VNC），无需任何本地软件即可连接。这种方式方便快捷，适合临时性的简单操作。
-2.  **标准 SSH 客户端**: 这是最经典、通用的方式。
-    -   在 Windows 上，Windows 10 及以上已内置 OpenSSH 客户端，可直接在命令提示符或 PowerShell 中使用。此外，也可以选择 `PuTTY`、`Xshell` 等图形化工具。
-    -   在 macOS 和 Linux 上，可以直接使用系统自带的终端（Terminal），通过 `ssh root@<公网IP>` 命令进行连接。
-3.  **IDE 集成插件**: 许多现代化的代码编辑器和 IDE（如 VS Code, PyCharm）都提供了远程开发插件，可以直接连接到服务器，并在本地环境中无缝地进行远程文件编辑和代码调试。
+（1）**云服务商控制台**: 大部分云服务商都提供了网页版的远程连接工具（如 VNC），无需任何本地软件即可连接。这种方式方便快捷，适合临时性的简单操作。
+
+（2）**标准 SSH 客户端**: 这是最经典、通用的方式。
+
+- 在 Windows 上，Windows 10 及以上已内置 OpenSSH 客户端，可直接在命令提示符或 PowerShell 中使用。此外，也可以选择 `PuTTY`、`Xshell` 等图形化工具。
+- 在 macOS 和 Linux 上，可以直接使用系统自带的终端（Terminal），通过 `ssh root@<公网IP>` 命令进行连接。
+
+（3）**IDE 集成插件**: 许多现代化的代码编辑器和 IDE（如 VS Code, PyCharm）都提供了远程开发插件，可以直接连接到服务器，并在本地环境中无缝地进行远程文件编辑和代码调试。
 
 对于需要频繁管理服务器的开发者来说，一款功能强大的集成式终端工具能极大地提升效率。本次我们选用 **FinalShell** 作为演示工具，这是一款免费且功能丰富的 SSH 客户端，集成了服务器监控、文件管理、命令历史等多种实用功能。
 
@@ -88,9 +85,9 @@
 
 ### 2.2 在 FinalShell 中创建连接
 
-1.  打开 FinalShell，点击左上角的“文件夹”图标，打开“连接管理器”。
+（1）打开 FinalShell，点击左上角的“文件夹”图标，打开“连接管理器”。
 
-2.  在弹出的窗口中，如图 14-8 点击第一个带加号的图标（“新建连接”），选择“SSH连接(Linux)”。
+（2）在弹出的窗口中，如图 14-8 点击第一个带加号的图标（“新建连接”），选择“SSH连接(Linux)”。
 
 <p align="center">
   <img src="./images/14_2_5.png" width="80%" alt="FinalShell 连接管理器" />
@@ -98,13 +95,14 @@
   <em>图 14-8 FinalShell 连接管理器</em>
 </p>
 
-3.  如图 14-9 所示，在弹出的“新建 SSH 连接”窗口中，填写服务器的相关信息：
-    -   **名称**: 给连接起一个有意义的名称，方便识别其用途，例如 “阿里云-NER模型”。
-    -   **主机**: 填入服务器公网 IP 地址。
-    -   **端口**: 保持默认的 22。
-    -   **认证方法**: 选择“密码”。
-    -   **用户名**: 以本节演示使用的阿里云 Ubuntu 镜像为例，默认用户一般为 `root`。不同云厂商或镜像可能使用 `ubuntu`、`ec2-user` 等其他默认用户名，如果使用其他平台或镜像，建议在控制台或镜像说明中确认默认登录账号。
-    -   **密码**: 填写你设置的服务器登录密码。
+（3）如图 14-9 所示，在弹出的“新建 SSH 连接”窗口中，填写服务器的相关信息：
+
+- **名称**: 给连接起一个有意义的名称，方便识别其用途，例如 “阿里云-NER模型”。
+- **主机**: 填入服务器公网 IP 地址。
+- **端口**: 保持默认的 22。
+- **认证方法**: 选择“密码”。
+- **用户名**: 以本节演示使用的阿里云 Ubuntu 镜像为例，默认用户一般为 `root`。不同云厂商或镜像可能使用 `ubuntu`、`ec2-user` 等其他默认用户名，如果使用其他平台或镜像，建议在控制台或镜像说明中确认默认登录账号。
+- **密码**: 填写你设置的服务器登录密码。
 
 <p align="center">
   <img src="./images/14_2_6.png" width="80%" alt="FinalShell 新建 SSH 连接" />
@@ -112,9 +110,9 @@
   <em>图 14-9 FinalShell 新建 SSH 连接</em>
 </p>
 
-4.  填写完毕后，点击“确定”。此时，新的服务器配置会出现在连接管理器中。
+（4）填写完毕后，点击“确定”。此时，新的服务器配置会出现在连接管理器中。
 
-5.  如图 14-10，双击刚刚创建的连接，FinalShell 就会开始尝试连接你的云服务器。首次连接时，可能会弹出一个接受主机密钥的提示，点击“接受并保存”即可。
+（5）如图 14-10，双击刚刚创建的连接，FinalShell 就会开始尝试连接你的云服务器。首次连接时，可能会弹出一个接受主机密钥的提示，点击“接受并保存”即可。
 
 <p align="center">
   <img src="./images/14_2_7.png" width="80%" alt="FinalShell 快速连接" />
@@ -140,11 +138,11 @@
 
 我们可以在 `pyproject.toml` 文件中定义一个 `[tool.uv]` 表，来存放所有 `uv` 相关的配置。以下是一些常用的配置选项：
 
--   **`native-tls`**: 一个布尔值，用于控制是使用 `native-tls`（系统原生 TLS 实现）还是 `rustls`（跨平台 TLS 实现）。默认值为 `false`（使用 `rustls`）。在某些网络环境下，切换到 `native-tls` 可能有助于解决 SSL/TLS 相关的连接问题。
--   **`index-url`**: 指定默认的 PyPI 索引 URL，相当于 `pip` 的 `--index-url`。
--   **`extra-index-url`**: 指定额外的 PyPI 索引 URL，相当于 `pip` 的 `--extra-index-url`。这对于同时使用公共 PyPI 和私有镜像源的场景非常有用。
--   **`no-index`**: 一个布尔值，设为 `true` 时，`uv` 将不会使用任何包索引，仅依赖于 `find-links` 指定的路径或已有的 `uv.lock` 文件。
--   **`find-links`**: 一个 URL 或本地路径的列表，用于指定查找包的备用位置。
+- **`native-tls`**: 一个布尔值，用于控制是使用 `native-tls`（系统原生 TLS 实现）还是 `rustls`（跨平台 TLS 实现）。默认值为 `false`（使用 `rustls`）。在某些网络环境下，切换到 `native-tls` 可能有助于解决 SSL/TLS 相关的连接问题。
+- **`index-url`**: 指定默认的 PyPI 索引 URL，相当于 `pip` 的 `--index-url`。
+- **`extra-index-url`**: 指定额外的 PyPI 索引 URL，相当于 `pip` 的 `--extra-index-url`。这对于同时使用公共 PyPI 和私有镜像源的场景非常有用。
+- **`no-index`**: 一个布尔值，设为 `true` 时，`uv` 将不会使用任何包索引，仅依赖于 `find-links` 指定的路径或已有的 `uv.lock` 文件。
+- **`find-links`**: 一个 URL 或本地路径的列表，用于指定查找包的备用位置。
 
 下面就以本次部署的 NER 项目为例，为它编写一个完整的 `pyproject.toml` 文件：
 
@@ -195,70 +193,70 @@ sudo apt update && sudo apt upgrade -y
 
 > `uv` 官方也提供了更简单的安装方式，即使在没有 Python 环境的服务器上，也可以通过 `curl -LsSf https://astral.sh/uv/install.sh | sh` 命令一键安装。不过，笔者在自己的服务器上尝试此方法时遇到了网络问题。所以，当前选择了 `pip` 的方式进行安装。
 
-1.  **检查 Python 版本**
+（1）**检查 Python 版本**
 
-    首先，检查服务器上是否已安装 Python，以及其版本。
+首先，检查服务器上是否已安装 Python，以及其版本。
 
-    ```bash
-    python3 --version
-    ```
-    
-    笔者使用的服务器自带了 Python 3.10.12，可以满足需求。如果服务器中默认没有安装 Python，或者版本过低，可以使用 `apt` 来安装。例如，安装 Python 3.10：
+```bash
+python3 --version
+```
 
-    ```bash
-    sudo apt install -y python3.10
-    ```
+笔者使用的服务器自带了 Python 3.10.12，可以满足需求。如果服务器中默认没有安装 Python，或者版本过低，可以使用 `apt` 来安装。例如，安装 Python 3.10：
 
-2.  **安装 uv**
+```bash
+sudo apt install -y python3.10
+```
 
-    有了 Python 环境后，就可以使用 `pip` 来安装 `uv` 了：
+（2）**安装 uv**
 
-    ```bash
-    pip install uv
-    ```
+有了 Python 环境后，就可以使用 `pip` 来安装 `uv` 了：
 
-    安装完成后，可以通过以下命令验证安装是否成功：
+```bash
+pip install uv
+```
 
-    ```bash
-    uv --version
-    ```
+安装完成后，可以通过以下命令验证安装是否成功：
+
+```bash
+uv --version
+```
 
 ### 4.3 准备项目文件与环境
 
 现在，我们来为部署项目创建一个独立的虚拟环境。
 
-1.  **上传项目文件**
+（1）**上传项目文件**
 
-    直接将本地的 `ner_deployment` 文件夹上传到服务器的用户主目录（通常是 `/root`）。
+直接将本地的 `ner_deployment` 文件夹上传到服务器的用户主目录（通常是 `/root`）。
 
-    利用 FinalShell 的图形化文件管理功能，操作非常简单。在 FinalShell 的文件浏览器中，确保服务器的路径是在用户主目录下，然后直接将本地的 `code/C14/ner_deployment` 目录拖拽到下方的服务器文件列表中即可。
+利用 FinalShell 的图形化文件管理功能，操作非常简单。在 FinalShell 的文件浏览器中，确保服务器的路径是在用户主目录下，然后直接将本地的 `code/C14/ner_deployment` 目录拖拽到下方的服务器文件列表中即可。
 
-    上传完成后，进入项目目录：
-    ```bash
-    cd ner_deployment
-    ```
-    
-    <p align="center">
-       <img src="./images/14_2_9.png" width="80%" alt="FinalShell 文件上传" />
-       <br />
-       <em>图 14-12 FinalShell 文件上传</em>
-    </p>
+上传完成后，进入项目目录：
+```bash
+cd ner_deployment
+```
 
-2.  **创建并激活虚拟环境**
+<p align="center">
+    <img src="./images/14_2_9.png" width="80%" alt="FinalShell 文件上传" />
+    <br />
+    <em>图 14-12 FinalShell 文件上传</em>
+</p>
 
-    在项目根目录下，运行以下命令。`uv` 会自动创建一个名为 `.venv` 的虚拟环境。
+（2）**创建并激活虚拟环境**
 
-    ```bash
-    uv venv
-    ```
+在项目根目录下，运行以下命令。`uv` 会自动创建一个名为 `.venv` 的虚拟环境。
 
-    激活虚拟环境:
+```bash
+uv venv
+```
 
-    ```bash
-    source .venv/bin/activate
-    ```
-    
-    激活后，终端提示符前面会出现 `(ner_deployment) `，表示当前正处于这个虚拟环境中。后续所有的 Python 和 `uv` 命令都将作用于此环境内，与系统环境隔离。
+激活虚拟环境:
+
+```bash
+source .venv/bin/activate
+```
+
+激活后，终端提示符前面会出现 `(ner_deployment) `，表示当前正处于这个虚拟环境中。后续所有的 Python 和 `uv` 命令都将作用于此环境内，与系统环境隔离。
 
 ## 五、部署 NER 应用
 
@@ -311,71 +309,73 @@ gunicorn -w 3 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8000
 
 直接在终端运行 `gunicorn` 命令，一旦关闭 SSH 连接，服务就会中断。为了让我们的 API 服务能在后台长期运行，并且在服务器重启后能自动启动，需要使用 `systemd`——Linux 系统标准的服务管理器。
 
-1.  **创建 systemd 服务文件**:
+（1）**创建 systemd 服务文件**
 
-    ```bash
-    sudo nano /etc/systemd/system/ner_api.service
-    ```
+```bash
+sudo nano /etc/systemd/system/ner_api.service
+```
 
-2.  **编写服务配置**:
-    在打开的 `nano` 编辑器中，粘贴以下内容。**注意：** 你需要将 `User` 和 `WorkingDirectory`、`ExecStart` 中的路径替换为你自己的实际用户名和项目路径。
+（2）**编写服务配置**
 
-    ```ini
-    [Unit]
-    Description=NER API Service
-    After=network.target
+在打开的 `nano` 编辑器中，粘贴以下内容。**注意：** 你需要将 `User` 和 `WorkingDirectory`、`ExecStart` 中的路径替换为你自己的实际用户名和项目路径。
 
-    [Service]
-    User=root
-    Group=root
-    WorkingDirectory=/root/ner_deployment
-    ExecStart=/root/ner_deployment/.venv/bin/gunicorn -w 3 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8000
-    Restart=on-failure
-    RestartSec=5s
+```ini
+[Unit]
+Description=NER API Service
+After=network.target
 
-    [Install]
-    WantedBy=multi-user.target
-    ```
+[Service]
+User=root
+Group=root
+WorkingDirectory=/root/ner_deployment
+ExecStart=/root/ner_deployment/.venv/bin/gunicorn -w 3 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8000
+Restart=on-failure
+RestartSec=5s
 
-    -   `[Unit]`: 定义了服务的元数据和依赖关系。`After=network.target` 表示服务应在网络准备好之后启动。
-    -   `[Service]`: 定义了服务的核心行为。
-        -   `User`/`Group`: 运行服务的用户和组。
-        -   `WorkingDirectory`: 启动服务前切换到的工作目录。
-        -   `ExecStart`: 启动服务的完整命令。**务必使用虚拟环境中的 `gunicorn` 绝对路径**。
-        -   `Restart`: 设置服务在失败时自动重启。
-    -   `[Install]`: 定义了服务的安装信息。`WantedBy=multi-user.target` 表示服务应在系统以多用户模式启动时启用。
+[Install]
+WantedBy=multi-user.target
+```
 
-    编辑完成后，按 `Ctrl+X`，然后按 `Y` 保存，最后按 `Enter` 确认。
+- `[Unit]`: 定义了服务的元数据和依赖关系。`After=network.target` 表示服务应在网络准备好之后启动。
+- `[Service]`: 定义了服务的核心行为。
+  - `User`/`Group`: 运行服务的用户和组。
+  - `WorkingDirectory`: 启动服务前切换到的工作目录。
+  - `ExecStart`: 启动服务的完整命令。**务必使用虚拟环境中的 `gunicorn` 绝对路径**。
+  - `Restart`: 设置服务在失败时自动重启。
+- `[Install]`: 定义了服务的安装信息。`WantedBy=multi-user.target` 表示服务应在系统以多用户模式启动时启用。
+
+编辑完成后，按 `Ctrl+X`，然后按 `Y` 保存，最后按 `Enter` 确认。
 
 上面的示例为了演示方便，直接使用 `root` 用户运行服务。生产环境中更推荐创建一个专用的非特权用户（例如 `neruser`），将项目目录及相关文件的读写权限授予该用户，并在服务配置中将 `User` / `Group` 设置为该用户，以降低服务被攻击时对整个系统造成的安全风险。
 
-3.  **管理服务**:
-    现在，使用 `systemctl` 命令来启动并管理新服务。由于我们在服务文件中已经指定了虚拟环境的绝对路径，并且 `sudo` 会以 `root` 权限执行，所以**无需刻意进入或退出虚拟环境**，在任何目录下执行以下命令效果都是一样的。
+（3）**管理服务**
 
-    -   **重新加载 systemd 配置**：让 systemd 读取新的服务文件。
-        ```bash
-        sudo systemctl daemon-reload
-        ```
-    -   **启动服务**:
-        ```bash
-        sudo systemctl start ner_api
-        ```
-    -   **设置开机自启**:
-        ```bash
-        sudo systemctl enable ner_api
-        ```
-    -   **查看服务状态**:
-        ```bash
-        sudo systemctl status ner_api
-        ```
-        
-        如果看到如图 14-14 所示 `active (running)` 的绿色字样，说明服务已成功部署并正在后台运行！
+现在，使用 `systemctl` 命令来启动并管理新服务。由于我们在服务文件中已经指定了虚拟环境的绝对路径，并且 `sudo` 会以 `root` 权限执行，所以**无需刻意进入或退出虚拟环境**，在任何目录下执行以下命令效果都是一样的。
 
-        <p align="center">
-          <img src="./images/14_2_11.png" width="80%" alt="systemctl status 显示服务正在运行" />
-          <br />
-          <em>图 14-14 systemctl status 显示服务正在运行</em>
-        </p>
+- **重新加载 systemd 配置**：让 systemd 读取新的服务文件。
+    ```bash
+    sudo systemctl daemon-reload
+    ```
+- **启动服务**:
+    ```bash
+    sudo systemctl start ner_api
+    ```
+- **设置开机自启**:
+    ```bash
+    sudo systemctl enable ner_api
+    ```
+- **查看服务状态**:
+  ```bash
+  sudo systemctl status ner_api
+  ```
+
+  如果看到如图 14-14 所示 `active (running)` 的绿色字样，说明服务已成功部署并正在后台运行！
+
+  <p align="center">
+    <img src="./images/14_2_11.png" width="80%" alt="systemctl status 显示服务正在运行" />
+    <br />
+    <em>图 14-14 systemctl status 显示服务正在运行</em>
+  </p>
 
 要查看服务的实时日志，可以使用 `journalctl` 命令：
 
