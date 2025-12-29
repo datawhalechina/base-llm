@@ -873,7 +873,7 @@ Deleted tag 'v1.0.0' (was 58af4bc)
 - **Description（可选）**：简单说明这个仓库做什么用；  
 - **Choose visibility**：选择 `Public`（任何人都能看到）或 `Private`（只有受邀成员可访问）；
 - **Add README**（可选）：可以勾选，会自动生成一个 `README.md`，方便后续展示。
-- **Add .gitignore**（可选）：选择语言（如 Python），GitHub 会自动生成忽略文件（如 `__pycache__/`），避免将无需版本控制的中间文件提交到仓库；
+- **Add .gitignore**：选择语言 Python，GitHub 会自动生成忽略文件（如 `__pycache__/`），避免将无需版本控制的中间文件提交到仓库；
 - **Add license**（可选）：选择开源协议（如 MIT、Apache 2.0），明确项目的开源许可范围。
 
 <p align="center">
@@ -986,10 +986,11 @@ git clone git@github.com:your-username/ner-demo.git
 
 ```bash
 Cloning into 'ner-demo'...
-remote: Enumerating objects: 3, done.
-remote: Counting objects: 100% (3/3), done.
-remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
-Receiving objects: 100% (3/3), done.
+remote: Enumerating objects: 4, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 4 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+Receiving objects: 100% (4/4), done.
 ```
 
 执行完毕后，当前目录下会出现一个名为 `ner-demo` 的文件夹，里面已经包含：
@@ -1010,7 +1011,6 @@ Receiving objects: 100% (3/3), done.
 
   ```bash
   git pull origin main
-  # 或 git pull origin master
   ```
 
   这样可以确保当前是基于团队的最新代码开始一天的开发，避免在过期代码上继续工作。
