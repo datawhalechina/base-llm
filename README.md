@@ -124,7 +124,7 @@
     - [x] [LLaMA-Factory RLHF（DPO）实战](./docs/chapter12/02_llama_factory.md)
 - **第 3 章：大模型训练与量化**
     - [x] [模型量化实战](./docs/chapter13/01_quantization.md)
-    - [ ] [Deepspeed 框架介绍](./docs/chapter13/01_deepspeed.md)
+    - [x] [Deepspeed 框架介绍](./docs/chapter13/01_deepspeed.md)
 
 ### 第四部分：应用部署篇
 - **第 1 章：模型服务部署**
