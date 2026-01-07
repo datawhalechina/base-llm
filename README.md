@@ -81,6 +81,7 @@
 ### 第一部分：理论篇
 - **第 1 章：NLP简介**
     - [x] [NLP 概述](./docs/chapter1/01_nlp_intro.md)
+    - [x] [环境准备](./docs/chapter1/02_preparation.md)
 - **第 2 章：文本表示与词向量**
     - [x] [初级分词技术](./docs/chapter2/03_tokenization.md)
     - [x] [词向量表示](./docs/chapter2/04_word_vector.md)
