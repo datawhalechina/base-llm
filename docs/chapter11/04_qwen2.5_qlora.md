@@ -297,7 +297,7 @@ sections=14
 
 #### 3.2.3 生成初始问答对
 
-我们设计的核心是 `System Prompt`，它会指导“教师”模型如何将知识片段转化为 `(instruction, output)` 问答对。
+简单设计一个 `System Prompt`，它会指导“教师”模型如何将知识片段转化为 `(instruction, output)` 问答对。
 
 ```python
 SYS_PROMPT = (
