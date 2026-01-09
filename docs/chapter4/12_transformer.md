@@ -58,50 +58,52 @@ graph TD
 
 自注意力的计算过程与上一节介绍的 QKV 范式完全一致，关键区别在于 Q, K, V 的来源。
 
-1.  **生成 Q, K, V 向量**：
+（1）**生成 Q, K, V 向量**：
 
-    对于输入序列中的**每一个**词元，首先获取其词嵌入向量 $x_i$。然后，将该向量分别与三个可学习的、在整个模型中共享的权重矩阵 $W^Q, W^K, W^V$ 相乘，生成该词元专属的 Query 向量 $q_i$、Key 向量 $k_i$ 和 Value 向量 $v_i$。
+对于输入序列中的**每一个**词元，首先获取其词嵌入向量 $x_i$。然后，将该向量分别与三个可学习的、在整个模型中共享的权重矩阵 $W^Q, W^K, W^V$ 相乘，生成该词元专属的 Query 向量 $q_i$、Key 向量 $k_i$ 和 Value 向量 $v_i$。
 
-    $$
-    q_i = x_i W^Q \\
-    k_i = x_i W^K \\
-    v_i = x_i W^V
-    $$
+$$
+q_i = x_i W^Q \\
+k_i = x_i W^K \\
+v_i = x_i W^V
+$$
 
-    这三个矩阵的作用是将原始的词嵌入向量投影到不同的、专门用于注意力计算的表示空间中，赋予了模型更大的灵活性。
+这三个矩阵的作用是将原始的词嵌入向量投影到不同的、专门用于注意力计算的表示空间中，赋予了模型更大的灵活性。
 
-2.  **计算注意力分数**：
+（2）**计算注意力分数**：
 
-    为了计算第 $i$ 个词元的新表示，需要用它的 Query 向量 $q_i$ 去和**所有**词元（包括它自己）的 Key 向量 $k_j$ 计算点积，得到注意力分数。
+为了计算第 $i$ 个词元的新表示，需要用它的 Query 向量 $q_i$ 去和**所有**词元（包括它自己）的 Key 向量 $k_j$ 计算点积，得到注意力分数。
 
-    $$
-    \text{score}(i, j) = q_i \cdot k_j
-    $$
+$$
+\text{score}(i, j) = q_i \cdot k_j
+$$
 
-3.  **缩放与归一化**：
-    将得到的分数除以一个缩放因子 $\sqrt{d_k}$（$d_k$ 是 Key 向量的维度），然后通过 Softmax 函数进行归一化，得到最终的注意力权重 $\alpha_{ij}$。这个缩放步骤的目的与上一节中介绍的一致，都是为了在训练过程中保持梯度稳定。当向量维度 $d_k$ 较大时，点积结果的方差会增大，可能将 Softmax 函数推向其梯度极小的区域，从而导致梯度消失，影响模型学习。进行缩放可以有效缓解这个问题。
+（3）**缩放与归一化**：
 
-    $$
-    \alpha_{ij} = \text{softmax}\left(\frac{q_i \cdot k_j}{\sqrt{d_k}}\right)
-    $$
+将得到的分数除以一个缩放因子 $\sqrt{d_k}$（$d_k$ 是 Key 向量的维度），然后通过 Softmax 函数进行归一化，得到最终的注意力权重 $\alpha_{ij}$。这个缩放步骤的目的与上一节中介绍的一致，都是为了在训练过程中保持梯度稳定。当向量维度 $d_k$ 较大时，点积结果的方差会增大，可能将 Softmax 函数推向其梯度极小的区域，从而导致梯度消失，影响模型学习。进行缩放可以有效缓解这个问题。
+
+$$
+\alpha_{ij} = \text{softmax}\left(\frac{q_i \cdot k_j}{\sqrt{d_k}}\right)
+$$
 
 4.  **加权求和**：
-    使用计算出的权重 $\alpha_{ij}$ 对**所有**词元的 Value 向量 $v_j$ 进行加权求和，得到第 $i$ 个词元经过自注意力计算后得到的新表示 $z_i$。
 
-    $$
-    z_i = \sum_j \alpha_{ij} v_j
-    $$
+使用计算出的权重 $\alpha_{ij}$ 对**所有**词元的 Value 向量 $v_j$ 进行加权求和，得到第 $i$ 个词元经过自注意力计算后得到的新表示 $z_i$。
+
+$$
+z_i = \sum_j \alpha_{ij} v_j
+$$
 
 通过这个过程，输出向量 $z_i$ 不再仅仅包含原始词元 $x_i$ 的信息，而是融合了整个序列中所有与之相关词元的信息，成为一个上下文感知的、更丰富的表示。其本质可以理解为：序列中的每个词元都同时扮演着“查询（Q）”、“键（K）”和“值（V）”三种角色。通过计算查询与其他所有词元的键之间的相关性，来决定如何加权融合所有词元的值，从而为每个词元生成一个全新的、深度融合了全局上下文信息的表示。
 
 > 既然 Q, K, V 都来自同一个输入 X，为什么不直接用 X 计算，而要引入三个独立的权重矩阵 $W^Q, W^K, W^V$？甚至，为什么是三个，而不是两个或四个？
 >
-> 这可以类比于在图书馆查资料的过程：
-> 1.  **Query (Q) - 你要问的问题**：代表了你主动想查询的意图。
-> 2.  **Key (K) - 书的索引/标签**：代表了书本内容的关键特征，用于被动地和你的问题进行匹配。
-> 3.  **Value (V) - 书的具体内容**：代表了书本实际包含的信息。
+> 这可以类比在图书馆查资料的过程：
+> - **Query (Q) - 要问的问题**：代表了我们主动想查询的意图。
+> - **Key (K) - 书的索引/标签**：代表了书本内容的关键特征，用于被动地和你的问题进行匹配。
+> - **Value (V) - 书的具体内容**：代表了书本实际包含的信息。
 >
-> 你的“问题”和你书本的“索引”可能都源于同一个知识领域（同一个输入 X），但它们在信息检索这个任务中扮演的角色是截然不同的。$W^Q, W^K, W^V$ 这三个矩阵的作用，就是让模型学会将原始输入 X 投影到三个功能不同的空间中，分别去扮演好“查询者”、“被查询的索引”和“信息提供者”这三种角色。Q-K 配对解决了“如何定位相关信息”的问题，而 V 提供了“应该提取什么信息”的答案。这个三元组结构在功能上是完备且高效的，因此成为了注意力机制的标准范式。
+> 我们的“问题”和书本的“索引”可能都源于同一个知识领域（同一个输入 X），但它们在信息检索这个任务中扮演的角色是截然不同的。$W^Q, W^K, W^V$ 这三个矩阵的作用，就是让模型学会将原始输入 X 投影到三个功能不同的空间中，分别去扮演好“查询者”、“被查询的索引”和“信息提供者”这三种角色。Q-K 配对解决了“如何定位相关信息”的问题，而 V 提供了“应该提取什么信息”的答案。这个三元组结构在功能上是完备且高效的，所以成为了注意力机制的标准范式。
 
 ### 1.3 矩阵运算与并行化
 
@@ -162,11 +164,11 @@ class SelfAttention(nn.Module):
 
 - **`__init__`**: 初始化了三个 `nn.Linear` 层，它们分别对应将输入映射到 Q, K, V 空间的权重矩阵 $W^Q, W^K, W^V$。
 - **`forward`**:
-    1.  `q_linear(x)`, `k_linear(x)`, `v_linear(x)`：将形状为 `[batch_size, seq_len, hidden_size]` 的输入张量 `x` 分别通过三个线性层，一次性地为序列中的所有词元计算出 Q, K, V 矩阵。
-    2.  `torch.matmul(q, k.transpose(-2, -1))`: 这是实现并行计算的核心。通过将 K 矩阵的最后两个维度转置（`seq_len, hidden_size` -> `hidden_size, seq_len`），再与 Q 矩阵相乘，直接得到了一个 `[batch_size, seq_len, seq_len]` 的分数矩阵。该矩阵中的 `scores[b, i, j]` 代表了批次 `b` 中第 `i` 个词元对第 `j` 个词元的注意力分数。
-    3.  `/ math.sqrt(self.hidden_size)`：执行缩放操作，防止梯度消失。
-    4.  `torch.softmax(scores, dim=-1)`：对分数的最后一个维度（`seq_len`）进行 Softmax，得到归一化的注意力权重。
-    5.  `torch.matmul(attention_weights, v)`：将权重矩阵与 V 矩阵相乘，完成了对所有词元的 Value 向量的加权求和，得到最终的上下文感知表示。
+    - `q_linear(x)`, `k_linear(x)`, `v_linear(x)`：将形状为 `[batch_size, seq_len, hidden_size]` 的输入张量 `x` 分别通过三个线性层，一次性地为序列中的所有词元计算出 Q, K, V 矩阵。
+    - `torch.matmul(q, k.transpose(-2, -1))`: 这是实现并行计算的核心。通过将 K 矩阵的最后两个维度转置（`seq_len, hidden_size` -> `hidden_size, seq_len`），再与 Q 矩阵相乘，直接得到了一个 `[batch_size, seq_len, seq_len]` 的分数矩阵。该矩阵中的 `scores[b, i, j]` 代表了批次 `b` 中第 `i` 个词元对第 `j` 个词元的注意力分数。
+    - `/ math.sqrt(self.hidden_size)`：执行缩放操作，防止梯度消失。
+    - `torch.softmax(scores, dim=-1)`：对分数的最后一个维度（`seq_len`）进行 Softmax，得到归一化的注意力权重。
+    - `torch.matmul(attention_weights, v)`：将权重矩阵与 V 矩阵相乘，完成了对所有词元的 Value 向量的加权求和，得到最终的上下文感知表示。
 
 ## 二、多头注意力机制
 
@@ -186,10 +188,13 @@ class SelfAttention(nn.Module):
 
 具体流程如下：
 
-1.  **并行计算**：假设有 $h$ 个头，那么就初始化 $h$ 组不同的权重矩阵 $(W^Q_0, W^K_0, W^V_0), (W^Q_1, W^K_1, W^V_1), \dots, (W^Q_{h-1}, W^K_{h-1}, W^V_{h-1})$。
-2.  **独立注意力**：对于输入序列，每个头都独立地执行一次完整的自注意力计算，产生一个输出矩阵 $Z_i$。
-3.  **拼接与投影**：将所有 $h$ 个头的输出矩阵 $Z_0, Z_1, \dots, Z_{h-1}$ 在特征维度上进行**拼接 (Concatenate)**。
-4.  **最终输出**：将拼接后的巨大矩阵乘以一个新的权重矩阵 $W^O$，将其投影回原始的输入维度，得到多头注意力机制的最终输出。
+（1）**并行计算**：假设有 $h$ 个头，那么就初始化 $h$ 组不同的权重矩阵 $(W^Q_0, W^K_0, W^V_0), (W^Q_1, W^K_1, W^V_1), \dots, (W^Q_{h-1}, W^K_{h-1}, W^V_{h-1})$。
+
+（2）**独立注意力**：对于输入序列，每个头都独立地执行一次完整的自注意力计算，产生一个输出矩阵 $Z_i$。
+
+（3）**拼接与投影**：将所有 $h$ 个头的输出矩阵 $Z_0, Z_1, \dots, Z_{h-1}$ 在特征维度上进行**拼接 (Concatenate)**。
+
+（4）**最终输出**：将拼接后的巨大矩阵乘以一个新的权重矩阵 $W^O$，将其投影回原始的输入维度，得到多头注意力机制的最终输出。
 
 多头机制允许模型在不同的表示子空间中共同学习上下文信息。例如，一个头可能专注于捕捉长距离的语法依赖，而另一个头可能更关注局部的词义关联。这种设计极大地增强了模型的表达能力。
 
@@ -246,16 +251,16 @@ class MultiHeadSelfAttention(nn.Module):
     - `q_linear, k_linear, v_linear`：与单头类似，但这里的线性层输出维度仍然是 `hidden_size`。这是为了**一次性计算出所有头所需的总特征**。
     - `wo`：对应于多头注意力机制中的输出权重矩阵 $W^O$，用于融合所有头的信息。
 - **`forward`**:
-    1.  **线性变换**: 与单头版本相同，得到总的 Q, K, V 矩阵。
-    2.  **拆分多头**: 
-        -   `.view(batch_size, seq_len, self.num_heads, self.head_dim)`: 首先，将 `hidden_size` 维度逻辑上拆分为 `num_heads` 和 `head_dim` 两个维度。此时张量形状变为 `[batch, seq_len, num_heads, head_dim]`。
-        -   `.transpose(1, 2)`: 然后，交换 `seq_len` 和 `num_heads` 维度，得到 `[batch, num_heads, seq_len, head_dim]`。这一步是为了让 `num_heads` 成为一个类似批次 (batch) 的维度，使得后续的矩阵乘法可以在每个头内部独立、并行地进行。
-    3.  **并行计算注意力**: `torch.matmul(q, k.transpose(-2, -1))` 现在是一个四维张量的乘法。PyTorch 会自动地将其解释为在第 0 和第 1 维（`batch` 和 `num_heads`）上进行批处理，而对最后两个维度执行矩阵乘法。这样就实现了所有头的注意力分数计算的并行化。
-    4.  **合并多头**: 这是拆分操作的逆过程。
+    - **线性变换**: 与单头版本相同，得到总的 Q, K, V 矩阵。
+    - **拆分多头**: 
+        - `.view(batch_size, seq_len, self.num_heads, self.head_dim)`: 首先，将 `hidden_size` 维度逻辑上拆分为 `num_heads` 和 `head_dim` 两个维度。此时张量形状变为 `[batch, seq_len, num_heads, head_dim]`。
+        - `.transpose(1, 2)`: 然后，交换 `seq_len` 和 `num_heads` 维度，得到 `[batch, num_heads, seq_len, head_dim]`。这一步是为了让 `num_heads` 成为一个类似批次 (batch) 的维度，使得后续的矩阵乘法可以在每个头内部独立、并行地进行。
+    - **并行计算注意力**: `torch.matmul(q, k.transpose(-2, -1))` 现在是一个四维张量的乘法。PyTorch 会自动地将其解释为在第 0 和第 1 维（`batch` 和 `num_heads`）上进行批处理，而对最后两个维度执行矩阵乘法。这样就实现了所有头的注意力分数计算的并行化。
+    - **合并多头**: 这是拆分操作的逆过程。
         -   `.transpose(1, 2)`: 先将 `num_heads` 和 `seq_len` 维度换回来，形状变为 `[batch, seq_len, num_heads, head_dim]`。
         -   `.contiguous()`: 由于 `transpose` 操作可能导致张量在内存中不是连续存储的，需要调用 `.contiguous()` 来确保内存连续，之后才能安全地使用 `.view()`。
         -   `.view(batch_size, seq_len, self.hidden_size)`: 最后，将 `num_heads` 和 `head_dim` 两个维度重新合并成 `hidden_size` 维度，完成了所有头输出的拼接。
-    5.  **输出投影**: 将合并后的结果通过 `wo` 线性层，得到最终输出。
+    - **输出投影**: 将合并后的结果通过 `wo` 线性层，得到最终输出。
 
 ## 三、Transformer 整体结构
 
@@ -385,21 +390,12 @@ $$ input_\text{embedding} = token_\text{embedding} + positional_\text{encoding} 
 
 ### 3.5 注意力掩码
 
-掩码是 Transformer 模型中一个重要的机制。其**主要目的**是确保解码器在生成序列时的**自回归**特性，即不能“看到”未来的信息。此外，作为一个**通用的工程实践**，掩码也被用来处理批量训练中因句子长度不同而引入的填充（Padding）问题。
+掩码是 Transformer 模型中一个重要的机制。其**主要目的**是确保解码器在生成序列时的**自回归**特性，即不能“看到”未来的信息。此外，作为一个**通用的工程实践**，掩码也被用来处理批量训练中因句子长度不同而引入的填充（Padding）问题。Transformer 主要使用以下两种掩码：
 
-Transformer 主要使用以下两种掩码：
+（1）因果掩码：因果掩码专用于解码器的**带掩码的自注意力（Masked Self-Attention）**子层，是为了确保解码过程遵循**自回归（Auto-regressive）**特性，即生成第 $i$ 个词元时只能依赖前 $i-1$ 个词元的信息，而绝不能“偷看”到 $i$ 及之后位置的内容。它的实现核心是确保注意力权重矩阵呈现**下三角矩阵**的形态。对于长度为 $T$ 的序列，在 $[T, T]$ 的矩阵中，主对角线及以下的位置被标记为可关注（如 `True` 或 0），而主对角线以上的位置则被标记为屏蔽（如 `False` 或 1）。在计算 Softmax 之前，所有被屏蔽位置的注意力分数会被加上一个极大的负数（如 `-inf`），迫使其注意力权重归零，从而物理上切断了信息的向后传播路径。
 
-#### 1. 因果掩码
-
--   **作用**：仅应用于解码器的“带掩码的自注意力”（Masked Self-Attention）子层，以确保解码过程的自回归（auto-regressive）特性。
--   **原理**：解码器在生成第 `i` 个词元时，只能依赖于 `1` 到 `i-1` 位置的词元信息，绝不能接触到 `i` 及之后位置的信息。因果掩码通过屏蔽未来位置来实现这一点。
--   **实现**：它通常是一个下三角矩阵。对于一个长度为 `T` 的序列，会生成一个 `[T, T]` 的掩码矩阵。在这个矩阵中，主对角线及以下的元素为 `True`（或 0），表示可以关注；而主对角线以上的元素为 `False`（或 1），表示需要被屏蔽。与填充掩码类似，在计算 Softmax 之前，所有需要被屏蔽的位置的注意力分数会被加上一个极大的负数，使其 Softmax 后的权重变为 0。
-
-#### 2. 填充掩码
-
--   **作用**：应用于编码器和解码器的所有注意力层，用于忽略输入序列中的填充部分。
--   **原理**：由于填充词元（如 `<pad>`）本身不携带语义信息，让模型关注它们会引入噪声，影响模型性能。填充掩码的作用就是在计算注意力分数后，将所有由填充词元产生的位置（无论是作为查询 Query 还是作为键 Key）对应的分数设置为一个极大的负数（如 `-1e9` 或负无穷）。
--   **实现**：假设有一个注意力分数矩阵，维度为 `[batch_size, num_heads, seq_len, seq_len]`。填充掩码会是一个 `[batch_size, 1, 1, seq_len]` 的矩阵（或可广播的形状），标记了哪些位置是填充。在进行 Softmax 之前，这个掩码会被加到分数矩阵上。经过 Softmax 运算后，这些负无穷位置的注意力权重会趋近于 0，从而在后续的加权求和中被完全忽略。
+（2）填充掩码：填充掩码广泛应用于编码器和解码器的所有注意力层，目的是解决变长序列批量处理时的**填充（Padding）**问题。由于填充词元（如 `<pad>`）本身不携带语义信息，若模型对其分配注意力，不仅浪费计算资源，还会引入噪声干扰。填充掩码的作用就是在计算注意力分数后，将所有涉及填充词元的位置（无论是作为查询 Query 还是作为键 Key）的对应分数强制设为极大的负数（如 `-1e9` 或负无穷）。假设有一个注意力分数矩阵，维度为 `[batch_size, num_heads, seq_len, seq_len]`。填充掩码会是一个 `[batch_size, 1, 1, seq_len]` 的矩阵（或可广播的形状），标记了哪些位置是填充。在进行 Softmax 之前，这个掩码会被加到分数矩阵上。经过 Softmax 运
+算后，这些负无穷位置的注意力权重会趋近于 0，从而在后续的加权求和中被完全忽略。
 
 在解码器的自注意力层中，这两种掩码通常会结合使用，确保模型既不会关注到未来的信息，也不会关注到填充位。
 
@@ -408,10 +404,14 @@ Transformer 主要使用以下两种掩码：
 解码器在训练和推理时的行为有很大不同。训练时，模型可以看到完整的“正确答案”序列，并通过注意力掩码来并行计算所有位置的损失。
 
 然而，在**推理**时，模型必须逐个生成词元，这是一个**自回归**的过程：
-1.  输入 `[BOS]`（开始符），生成第一个词 `token_1`。
-2.  输入 `[BOS], token_1`，生成第二个词 `token_2`。
-3.  输入 `[BOS], token_1, token_2`，生成第三个词 `token_3`。
-4.  ... 直到生成 `[EOS]`（结束符）或达到最大长度。
+
+（1）输入 `[BOS]`（开始符），生成第一个词 `token_1`。
+
+（2）输入 `[BOS], token_1`，生成第二个词 `token_2`。
+
+（3）输入 `[BOS], token_1, token_2`，生成第三个词 `token_3`。
+
+（4）... 直到生成 `[EOS]`（结束符）或达到最大长度。
 
 如果按照这个流程直接计算，效率会非常低下。例如，在生成 `token_3` 时，模型需要为 `[BOS]` 和 `token_1` 重新计算它们的 Q, K, V 向量并参与注意力计算。但事实上，`[BOS]` 和 `token_1` 的 Key 和 Value 向量在之前的步骤中已经被计算过了。
 
@@ -420,6 +420,612 @@ Transformer 主要使用以下两种掩码：
 -   **工作流程**：在生成第 $t$ 个词元时，模型只需要为当前输入的第 $t-1$ 个词元计算出它自己的 $q_{t-1}, k_{t-1}, v_{t-1}$。然后，它从缓存中取出历史的 $K_{cache} = [k_0, k_1, ..., k_{t-2}]$ 和 $V_{cache} = [v_0, v_1, ..., v_{t-2}]$。最后，将新的 $k_{t-1}, v_{t-1}$ 追加到缓存中，并用 $q_{t-1}$ 与更新后的完整 $K_{cache}, V_{cache}$ 进行注意力计算。
 
 通过 KV 缓存，每次解码步骤的计算量从与整个已生成序列长度的平方（$O(T^2)$）相关，降低到只与序列长度（$O(T)$）线性相关，极大地加速了文本生成的速度，是实现高效大模型推理的常用技术之一。需要注意，KV 缓存占用会随步数线性增长（$O(T)$），在多层多头设置下需关注显存开销。
+
+## 四、Transformer 代码实践
+
+### 4.1 项目结构设计
+
+为了更好地理解 Transformer 的内部工作机制，接下来尝试从零实现一个完整的 Transformer 模型。我们会采用**“先整体框架，后组件实现”**的思路，拆分多个文件来构建项目。在前面我们详细分析了 Transformer 的几大核心组件，分别是**位置编码**、**多头注意力**、**前馈网络 **以及**归一化**。为了体现这些组件的独立性和复用性，我们将遵循**模块化**的设计原则，将它们拆分到 `src/` 目录下的独立文件中，而将模型的组装和运行逻辑放在根目录的 `main.py` 中。目录设计如下：
+
+```text
+code/C4/transformer/
+├── src/
+│   ├── transformer.py  # 核心框架：定义 Transformer、EncoderLayer 和 DecoderLayer
+│   ├── attention.py    # 核心组件：多头注意力机制 (MultiHeadAttention)
+│   ├── ffn.py          # 核心组件：前馈神经网络 (FeedForward)
+│   ├── norm.py         # 辅助组件：层归一化 (LayerNorm)
+│   └── pos.py          # 辅助组件：位置编码 (PositionalEncoding)
+└── main.py             # 入口脚本：组装模型并演示前向传播
+```
+
+### 4.2 搭建整体框架
+
+在开始编写具体的注意力机制或前馈网络之前，我们可以先在 `src/transformer.py` 中勾勒出模型的高层架构。这种**“自顶向下”**的编程方式有助于我们理清数据流向。通过前面的学习我们知道，Transformer 宏观上是一个 Encoder-Decoder 架构，所以首先要实现的主要是以下几个部分：
+
+- **Embedding 层**：将输入的 token ID 转换为连续的向量表示，并加上位置编码以保留序列顺序信息。
+- **Encoder 堆叠**：由 $N$ 个 `EncoderLayer` 串联而成，负责深度提取和理解输入序列的特征。
+- **Decoder 堆叠**：由 $N$ 个 `DecoderLayer` 串联而成，负责基于 Encoder 的输出逐步生成目标序列。
+- **Output 层**：一个线性层，将解码器的最终输出映射回词表大小，用于计算下一个词的概率分布。
+
+```python
+# src/transformer.py
+import torch.nn as nn
+from .pos import PositionalEncoding  # 稍后实现
+# ... 导入其他组件
+
+class Transformer(nn.Module):
+    def __init__(self, src_vocab_size, tgt_vocab_size, dim=512, n_heads=8, n_layers=6, ...):
+        super().__init__()
+
+        self.dim = dim
+        # 1. 嵌入层与位置编码
+        # src_embedding: 将源语言序列映射为向量 (Encoder输入)
+        self.src_embedding = nn.Embedding(src_vocab_size, dim)
+        # tgt_embedding: 将目标语言序列映射为向量 (Decoder输入)
+        self.tgt_embedding = nn.Embedding(tgt_vocab_size, dim)
+        self.pos_encoder = PositionalEncoding(dim, max_seq_len)
+        self.dropout = nn.Dropout(dropout)
+        
+        # 2. 编码器与解码器堆叠
+        # 使用 ModuleList 来存储层列表，支持按索引访问和自动注册参数
+        self.encoder_layers = nn.ModuleList([
+            EncoderLayer(dim, n_heads, hidden_dim, dropout) for _ in range(n_layers)
+        ])
+        self.decoder_layers = nn.ModuleList([
+            DecoderLayer(dim, n_heads, hidden_dim, dropout) for _ in range(n_layers)
+        ])
+        
+        # 3. 输出头
+        self.output = nn.Linear(dim, tgt_vocab_size)
+
+    def forward(self, src, tgt):
+        # 1. 生成掩码 (Padding Mask & Causal Mask)
+        src_mask, tgt_mask = self.generate_mask(src, tgt)
+        
+        # 2. 编码器前向传播
+        enc_output = self.encode(src, src_mask)
+        
+        # 3. 解码器前向传播
+        dec_output = self.decode(tgt, enc_output, src_mask, tgt_mask)
+        
+        # 4. 输出 Logits
+        return self.output(dec_output)
+        return logits
+```
+
+有了这个骨架，接下来的任务就是填充 `EncoderLayer` 和 `DecoderLayer`，而它们又依赖于更底层的组件。
+
+### 4.3 实现核心组件
+
+（1）位置编码 (src/pos.py)
+
+在 `src/transformer.py` 中我们引入了 `PositionalEncoding`，它是 Transformer 处理序列顺序的关键。这里我们实现论文中的正弦位置编码。位置编码的核心在于初始化阶段，我们会预先计算好一个足够长的编码矩阵。它的计算公式使用了不同频率的正弦和余弦函数：
+
+$$
+PE(pos, 2i) = \sin(pos / 10000^{2i/d_{model}}) \\
+PE(pos, 2i+1) = \cos(pos / 10000^{2i/d_{model}})
+$$
+
+在 `__init__` 方法中，我们一次性生成这个矩阵，并将其注册为 buffer。
+
+```python
+import torch
+import torch.nn as nn
+import math
+
+class PositionalEncoding(nn.Module):
+    """
+    正弦位置编码
+    Transformer 论文中使用固定公式计算位置编码，不涉及可学习参数。
+    """
+    def __init__(self, dim, max_seq_len=5000):
+        super().__init__()
+        
+        # 创建一个足够长的 PE 矩阵 [max_seq_len, dim]
+        pe = torch.zeros(max_seq_len, dim)
+        
+        # 生成位置索引 [0, 1, ..., max_seq_len-1] -> [max_seq_len, 1]
+        position = torch.arange(0, max_seq_len, dtype=torch.float).unsqueeze(1)
+        
+        # 计算分母中的 div_term: 10000^(2i/dim) = exp(2i * -log(10000)/dim)
+        # 这种对数变换的计算方式在数值上更稳定
+        div_term = torch.exp(torch.arange(0, dim, 2).float() * (-math.log(10000.0) / dim))
+        
+        # 填充 PE 矩阵
+        # 偶数维度用 sin，奇数维度用 cos
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        
+        # 增加 batch 维度: [1, max_seq_len, dim] 以便广播
+        pe = pe.unsqueeze(0)
+        
+        # 注册为 buffer
+        # register_buffer 的作用是告诉 PyTorch：
+        # 1. 'pe' 是模型状态的一部分，会随模型保存和加载 (state_dict)。
+        # 2. 'pe' 不是模型参数 (Parameter)，优化器更新时不会更新它。
+        self.register_buffer('pe', pe)
+```
+
+在前向传播中，我们的任务就是将位置编码加到输入的词嵌入上。由于我们预先生成的 `pe` 矩阵可能比当前的输入序列 `x` 要长，所以需要根据 `x` 的实际长度对 `pe` 进行切片。
+
+```python
+...
+class PositionalEncoding(nn.Module):
+    def __init__(self, dim, max_seq_len=5000):
+        ...
+
+    def forward(self, x):
+        """
+        Args:
+            x: 输入的词嵌入序列 [batch_size, seq_len, dim]
+        Returns:
+            加上位置编码后的序列 [batch_size, seq_len, dim]
+        """
+        # 截取与输入序列长度对应的位置编码并相加
+        # x.size(1) 是 seq_len
+        # self.pe 的形状是 [1, max_seq_len, dim]，切片后会自动广播到 batch_size
+        x = x + self.pe[:, :x.size(1), :]
+        return x
+```
+
+最后，我们可以编写一段简单的测试代码来验证维度是否正确。
+
+```python
+if __name__ == "__main__":
+    # 准备参数
+    batch_size, seq_len, dim = 2, 10, 512
+    max_seq_len = 100
+    
+    # 初始化模块
+    pe = PositionalEncoding(dim, max_seq_len)
+    
+    # 准备输入
+    x = torch.zeros(batch_size, seq_len, dim) # 输入为0，直接观察PE值
+    
+    # 前向传播
+    output = pe(x)
+    
+    # 验证输出
+    print("--- PositionalEncoding Test ---")
+    print(f"Input shape: {x.shape}")
+    print(f"Output shape: {output.shape}")
+```
+
+输出如下：
+
+```bash
+--- PositionalEncoding Test ---
+Input shape: torch.Size([2, 10, 512])
+Output shape: torch.Size([2, 10, 512])
+```
+
+（2）多头注意力 (src/attention.py)
+
+这是 Transformer 中最复杂的组件，用于从不同的“表示子空间”中提取信息。在初始化阶段，我们需要定义四个主要的线性层：`wq`, `wk`, `wv` 用于将输入投影到 Q, K, V 空间，`wo` 用于将多头注意力的输出投影回原始维度。
+
+```python
+# src/attention.py
+import torch
+import torch.nn as nn
+import math
+
+class MultiHeadAttention(nn.Module):
+    def __init__(self, dim, n_heads, dropout=0.1):
+        super().__init__()
+        self.dim = dim
+        self.n_heads = n_heads
+        self.head_dim = dim // n_heads
+        
+        # 定义 Wq, Wk, Wv 矩阵
+        # 这里我们使用一个大的线性层一次性计算所有头的 Q, K, V
+        self.wq = nn.Linear(dim, dim)
+        self.wk = nn.Linear(dim, dim)
+        self.wv = nn.Linear(dim, dim)
+        
+        # 最终输出的线性层 Wo
+        self.wo = nn.Linear(dim, dim)
+        
+        self.dropout = nn.Dropout(dropout)
+```
+
+这部分前向传播的重点是“分头”操作。我们不直接对 [batch, seq_len, dim] 进行计算，而是将其 reshape 为 [batch, n_heads, seq_len, head_dim]，这样就可以利用矩阵运算并行地处理所有头。
+
+```python
+...
+class MultiHeadAttention(nn.Module):
+    def __init__(self, dim, n_heads, dropout=0.1):
+        ...
+
+    def forward(self, q, k, v, mask=None):
+        batch_size = q.size(0)
+        
+        # 1. 线性投影
+        # [batch, seq_len, dim] -> [batch, seq_len, dim]
+        q = self.wq(q)
+        k = self.wk(k)
+        v = self.wv(v)
+        
+        # 2. 分头 (Split Heads)
+        # 变换形状: [batch, seq_len, n_heads, head_dim] 
+        # 然后转置: [batch, n_heads, seq_len, head_dim] 以便并行计算
+        q = q.view(batch_size, -1, self.n_heads, self.head_dim).transpose(1, 2)
+        k = k.view(batch_size, -1, self.n_heads, self.head_dim).transpose(1, 2)
+        v = v.view(batch_size, -1, self.n_heads, self.head_dim).transpose(1, 2)
+        
+        # 3. 计算缩放点积注意力 (Scaled Dot-Product Attention)
+        # scores: [batch, n_heads, seq_len, seq_len]
+        scores = torch.matmul(q, k.transpose(-2, -1)) / math.sqrt(self.head_dim)
+        
+        # 4. 应用掩码 (Masking)
+        if mask is not None:
+            # mask == 0 的位置被填充为负无穷，Softmax 后变为 0
+            scores = scores.masked_fill(mask == 0, float('-inf'))
+            
+        # 5. Softmax 与加权求和
+        attn_weights = torch.softmax(scores, dim=-1)
+        
+        if self.dropout is not None:
+             attn_weights = self.dropout(attn_weights)
+             
+        # context: [batch, n_heads, seq_len, head_dim]
+        context = torch.matmul(attn_weights, v)
+        
+        # 6. 合并多头 (Concat Heads)
+        # [batch, n_heads, seq_len, head_dim] -> [batch, seq_len, n_heads, head_dim]
+        # -> [batch, seq_len, dim]
+        context = context.transpose(1, 2).contiguous().view(batch_size, -1, self.dim)
+        
+        # 7. 输出层投影
+        output = self.wo(context)
+        
+        return output
+
+# 单元测试
+if __name__ == "__main__":
+    # 准备参数
+    batch_size, seq_len, dim = 2, 10, 512
+    n_heads = 8
+    
+    # 初始化模块
+    mha = MultiHeadAttention(dim, n_heads)
+    
+    # 准备输入 (Query, Key, Value 相同)
+    x = torch.randn(batch_size, seq_len, dim)
+    
+    # 前向传播
+    output = mha(x, x, x)
+    
+    # 验证输出
+    print("--- MultiHeadAttention Test ---")
+    print(f"Input shape: {x.shape}")
+    print(f"Output shape: {output.shape}")
+```
+
+输出如下：
+
+```bash
+--- MultiHeadAttention Test ---
+Input shape: torch.Size([2, 10, 512])
+Output shape: torch.Size([2, 10, 512])
+```
+
+（3）前馈神经网络 (src/ffn.py)
+
+标准的 Transformer FFN 是一个简单的两层全连接网络，中间包含激活函数（通常是 ReLU 或 GELU）。
+
+```python
+# src/ffn.py
+import torch.nn as nn
+
+class FeedForward(nn.Module):
+    def __init__(self, dim, hidden_dim, dropout=0.1):
+        super().__init__()
+        self.w1 = nn.Linear(dim, hidden_dim)  # 升维
+        self.w2 = nn.Linear(hidden_dim, dim)  # 降维
+        self.dropout = nn.Dropout(dropout)
+        
+    def forward(self, x):
+        # 线性变换 -> ReLU -> Dropout -> 线性变换
+        return self.w2(self.dropout(torch.relu(self.w1(x))))
+
+if __name__ == "__main__":
+    # 准备参数
+    batch_size, seq_len, dim = 2, 10, 512
+    hidden_dim = 2048
+    
+    # 初始化模块
+    ffn = FeedForward(dim, hidden_dim)
+    
+    # 准备输入
+    x = torch.randn(batch_size, seq_len, dim)
+    
+    # 前向传播
+    output = ffn(x)
+    
+    # 验证输出
+    print("--- FeedForward Test ---")
+    print(f"Input shape: {x.shape}")
+    print(f"Output shape: {output.shape}")
+```
+
+输出如下：
+
+```bash
+--- FeedForward Test ---
+Input shape: torch.Size([2, 10, 512])
+Output shape: torch.Size([2, 10, 512])
+```
+
+（4）层归一化 (src/norm.py)
+
+层归一化 (Layer Normalization) 是 Transformer 中用来稳定训练的组件。与 Batch Normalization 不同，它是在**最后一个维度**（即特征维度 `dim`）上进行归一化的。公式如下：
+
+$$
+y = \frac{x - \mu}{\sqrt{\sigma^2 + \epsilon}} \cdot \gamma + \beta
+$$
+
+其中 $\gamma$ 和 $\beta$ 是可学习的缩放和平移参数。
+
+```python
+import torch
+import torch.nn as nn
+
+class LayerNorm(nn.Module):
+    """
+    层归一化 (Layer Normalization)
+    公式: y = (x - mean) / sqrt(var + eps) * gamma + beta
+    """
+    def __init__(self, dim, eps=1e-6):
+        super().__init__()
+        self.eps = eps
+        # 可学习参数 gamma (缩放) 和 beta (偏移)
+        # nn.Parameter 会被自动注册为模型参数
+        self.gamma = nn.Parameter(torch.ones(dim))
+        self.beta = nn.Parameter(torch.zeros(dim))
+
+    def forward(self, x):
+        # x: [batch_size, seq_len, dim]
+        # 在最后一个维度 (dim) 上计算均值和方差
+        # keepdim=True 保持维度以便进行广播计算
+        mean = x.mean(-1, keepdim=True)
+        # unbiased=False 使用有偏估计 (分母为 N)，与 PyTorch 默认行为一致
+        var = x.var(-1, keepdim=True, unbiased=False)
+        
+        # 归一化
+        x_norm = (x - mean) / torch.sqrt(var + self.eps)
+        
+        # 缩放和平移
+        return self.gamma * x_norm + self.beta
+
+# 单元测试
+if __name__ == "__main__":
+    # 准备参数
+    batch_size, seq_len, dim = 2, 10, 512
+    
+    # 初始化模块
+    ln = LayerNorm(dim)
+    
+    # 准备输入
+    x = torch.randn(batch_size, seq_len, dim)
+    
+    # 前向传播
+    output = ln(x)
+    
+    # 验证输出
+    print("--- LayerNorm Test ---")
+    print(f"Input shape: {x.shape}")
+    print(f"Output shape: {output.shape}")
+```
+
+输出如下：
+
+```bash
+--- LayerNorm Test ---
+Input shape: torch.Size([2, 10, 512])
+Output shape: torch.Size([2, 10, 512])
+```
+
+### 4.4 组装与运行
+
+（1）完善核心框架 (src/transformer.py)
+
+之前我们只搭建了 `Transformer` 类的骨架，现在我们利用已经实现好的组件，按“编码器层 → 解码器层 → 辅助方法”的顺序来补全 `src/transformer.py`。编码器层，这部分包含一个多头自注意力子层和一个前馈网络子层，每个子层后面都接残差连接和层归一化（Post-LN 结构），代码如下：
+
+```python
+import torch
+import torch.nn as nn
+import math
+# 导入组件
+from .attention import MultiHeadAttention
+from .ffn import FeedForward
+from .norm import LayerNorm
+from .pos import PositionalEncoding
+
+class EncoderLayer(nn.Module):
+    def __init__(self, dim, n_heads, hidden_dim, dropout=0.1):
+        super().__init__()
+        # 多头自注意力子层
+        self.attention = MultiHeadAttention(dim, n_heads, dropout)
+        self.attention_norm = LayerNorm(dim)
+        # 前馈网络子层
+        self.feed_forward = FeedForward(dim, hidden_dim, dropout)
+        self.ffn_norm = LayerNorm(dim)
+        
+        self.dropout = nn.Dropout(dropout)
+        
+    def forward(self, x, mask=None):
+        # 子层 1：自注意力
+        _x = x
+        x = self.attention(x, x, x, mask)  # Q=K=V=x
+        x = self.attention_norm(_x + self.dropout(x))
+        
+        # 子层 2：前馈网络
+        _x = x
+        x = self.feed_forward(x)
+        x = self.ffn_norm(_x + self.dropout(x))
+        
+        return x
+```
+
+接下来是解码器层，这部分比编码器层多了一个“交叉注意力”子层，先是带掩码的自注意力，再是对编码器输出的交叉注意力，最后是前馈网络。
+
+```python
+class DecoderLayer(nn.Module):
+    def __init__(self, dim, n_heads, hidden_dim, dropout=0.1):
+        super().__init__()
+        # 1. 带掩码的自注意力
+        self.self_attention = MultiHeadAttention(dim, n_heads, dropout)
+        self.self_attn_norm = LayerNorm(dim)
+        # 2. 交叉注意力
+        self.cross_attention = MultiHeadAttention(dim, n_heads, dropout)
+        self.cross_attn_norm = LayerNorm(dim)
+        # 3. 前馈网络
+        self.feed_forward = FeedForward(dim, hidden_dim, dropout)
+        self.ffn_norm = LayerNorm(dim)
+        
+        self.dropout = nn.Dropout(dropout)
+        
+    def forward(self, x, enc_output, src_mask, tgt_mask):
+        # 子层 1：带掩码的自注意力
+        _x = x
+        x = self.self_attention(x, x, x, tgt_mask)
+        x = self.self_attn_norm(_x + self.dropout(x))
+        
+        # 子层 2：交叉注意力（Q 来自解码器，K/V 来自编码器输出）
+        _x = x
+        x = self.cross_attention(x, enc_output, enc_output, src_mask)
+        x = self.cross_attn_norm(_x + self.dropout(x))
+        
+        # 子层 3：前馈网络
+        _x = x
+        x = self.feed_forward(x)
+        x = self.ffn_norm(_x + self.dropout(x))
+        
+        return x
+```
+
+最后在 `Transformer` 主类中，我们需要补全相关的辅助方法。
+
+```python
+class Transformer(nn.Module):
+    def __init__(self, 
+                 src_vocab_size, 
+                 tgt_vocab_size, 
+                 dim=512, 
+                 n_heads=8, 
+                 n_layers=6, 
+                 hidden_dim=2048, 
+                 max_seq_len=5000, 
+                 dropout=0.1):
+        # ... 初始化嵌入层、位置编码、编码器/解码器堆叠以及输出层等 ...
+        self._init_parameters()
+
+    def _init_parameters(self):
+        for p in self.parameters():
+            if p.dim() > 1:
+                nn.init.xavier_uniform_(p)
+
+    def generate_mask(self, src, tgt):
+        # src_mask: [batch, 1, 1, src_len]，pad token 假设为 0
+        src_mask = (src != 0).unsqueeze(1).unsqueeze(2)
+        
+        # tgt_mask: [batch, 1, tgt_len, tgt_len]，结合 pad mask 和 causal mask
+        tgt_len = tgt.size(1)
+        tgt_pad_mask = (tgt != 0).unsqueeze(1).unsqueeze(2)  # [batch, 1, 1, tgt_len]
+        tgt_subsequent_mask = torch.tril(torch.ones((tgt_len, tgt_len), device=tgt.device)).bool()
+        tgt_mask = tgt_pad_mask & tgt_subsequent_mask.unsqueeze(0)
+        return src_mask, tgt_mask
+
+    def encode(self, src, src_mask):
+        x = self.src_embedding(src) * math.sqrt(self.dim)
+        x = self.pos_encoder(x)
+        x = self.dropout(x)
+        for layer in self.encoder_layers:
+            x = layer(x, src_mask)
+        return x
+
+    def decode(self, tgt, enc_output, src_mask, tgt_mask):
+        x = self.tgt_embedding(tgt) * math.sqrt(self.dim)
+        x = self.pos_encoder(x)
+        x = self.dropout(x)
+        for layer in self.decoder_layers:
+            x = layer(x, enc_output, src_mask, tgt_mask)
+        return x
+
+    # 前向传播
+    def forward(self, src, tgt):
+        ...
+```
+
+（2）运行主程序 (main.py)
+
+现在所有的零件都准备好了，我们可以在 `main.py` 中将它们组装起来，并运行一个简单的前向传播测试。
+
+```python
+import torch
+from src.transformer import Transformer
+
+def main():
+    # 超参数
+    src_vocab_size = 100
+    tgt_vocab_size = 100
+    dim = 512
+    n_heads = 8
+    n_layers = 6
+    hidden_dim = 2048
+    max_seq_len = 50
+    dropout = 0.1
+    
+    # 实例化模型
+    model = Transformer(
+        src_vocab_size, 
+        tgt_vocab_size, 
+        dim, 
+        n_heads, 
+        n_layers, 
+        hidden_dim, 
+        max_seq_len, 
+        dropout
+    )
+    
+    # 模拟输入数据
+    batch_size = 2
+    src_len = 10
+    tgt_len = 12
+    
+    # 随机生成 src 和 tgt 序列 (假设 pad_token_id=0)
+    # 确保没有 pad token 影响简单测试，或者手动插入
+    src = torch.randint(1, src_vocab_size, (batch_size, src_len))
+    tgt = torch.randint(1, tgt_vocab_size, (batch_size, tgt_len))
+    
+    # 前向传播
+    output = model(src, tgt)
+    
+    print("Model Architecture:")
+    # print(model)
+    print("\nTest Input:")
+    print(f"Source Shape: {src.shape}")
+    print(f"Target Shape: {tgt.shape}")
+    
+    print("\nModel Output:")
+    print(f"Output Shape: {output.shape}") # 预期 [batch_size, tgt_len, tgt_vocab_size]
+
+if __name__ == "__main__":
+    main()
+```
+
+输出如下：
+
+```bash
+Model Architecture:
+
+Test Input:
+Source Shape: torch.Size([2, 10])
+Target Shape: torch.Size([2, 12])
+
+Model Output:
+Output Shape: torch.Size([2, 12, 100])
+```
 
 ---
 
