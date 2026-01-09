@@ -423,6 +423,8 @@ $$ input_\text{embedding} = token_\text{embedding} + positional_\text{encoding} 
 
 ## 四、Transformer 代码实践
 
+> [本节完整代码](https://github.com/datawhalechina/base-nlp/tree/main/code/C4/transformer)
+
 ### 4.1 项目结构设计
 
 为了更好地理解 Transformer 的内部工作机制，接下来尝试从零实现一个完整的 Transformer 模型。我们会采用**“先整体框架，后组件实现”**的思路，拆分多个文件来构建项目。在前面我们详细分析了 Transformer 的几大核心组件，分别是**位置编码**、**多头注意力**、**前馈网络 **以及**归一化**。为了体现这些组件的独立性和复用性，我们将遵循**模块化**的设计原则，将它们拆分到 `src/` 目录下的独立文件中，而将模型的组装和运行逻辑放在根目录的 `main.py` 中。目录设计如下：
