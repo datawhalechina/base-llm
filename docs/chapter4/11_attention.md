@@ -422,6 +422,7 @@ class Seq2Seq(nn.Module):
 ---
 
 ## 参考文献
+
 [^1]: [Bahdanau, D., Cho, K., & Bengio, Y. (2014). *Neural machine translation by jointly learning to align and translate*. arXiv preprint arXiv:1409.0473.](https://arxiv.org/abs/1409.0473)
 
 [^2]: [Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). *Attention Is All You Need*. NeurIPS 2017.](https://arxiv.org/abs/1706.03762)

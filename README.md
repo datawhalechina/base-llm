@@ -1,10 +1,10 @@
 <div align='center'>
-  <img src="./logo.svg" alt="base-nlp Logo" width="70%">
+  <img src="./logo.svg" alt="base-llm Logo" width="70%">
 </div>
 
 <div align="center">
-  <h2>从 NLP 到大语言模型</h2>
-  <p><em>Base NLP is all you need</em></p>
+  <h2>LLM 的前世今生</h2>
+  <p><em>Base LLM is all you need</em></p>
 </div>
 
 <div align="center">
@@ -14,7 +14,7 @@
 </div>
 
 <div align="center">
-  <a href="https://datawhalechina.github.io/base-nlp/">
+  <a href="https://datawhalechina.github.io/base-llm/">
     <img src="https://img.shields.io/badge/📖_在线阅读-立即开始-success?style=for-the-badge&logoColor=white" alt="在线阅读"/>
   </a>
   <a href="https://github.com/datawhalechina">
@@ -27,9 +27,9 @@
 
 ## 📖 项目简介
 
-本项目是一个**从传统 NLP 到大语言模型（LLM）的全栈式学习教程**，旨在为开发者提供一条从理论入门到工程实战的清晰路径。
+本项目是一个**从传统自然语言处理（NLP）到大语言模型（LLM）的全栈式学习教程**，旨在为开发者提供一条从理论入门到工程实战的清晰路径。
 
-在 LLM 爆发的今天，许多开发者直接上手调用 API 或微调大模型，却往往忽视了底层的自然语言处理（NLP）基础。本项目主张 **“Base NLP is all you need”**，通过系统性地回顾 NLP 发展历程中的核心技术——从早期的词向量、循环神经网络（RNN），到变革性的 Transformer 架构，再到如今的 BERT、GPT 及 Llama 系列大模型——帮助读者构建坚实的技术护城河。
+在 LLM 爆发的今天，许多开发者直接上手调用 API 或微调大模型，却往往忽视了底层的自然语言处理（NLP）基础。本项目主张 **“Base LLM is all you need”**，通过系统性地回顾 NLP 发展历程中的核心技术——从早期的词向量、循环神经网络（RNN），到变革性的 Transformer 架构，再到如今的 BERT、GPT 及 Llama 系列大模型——帮助读者构建坚实的技术护城河。
 
 **核心内容覆盖：**
 
@@ -125,7 +125,7 @@
     - [x] [LLaMA-Factory RLHF（DPO）实战](./docs/chapter12/02_llama_factory.md)
 - **第 3 章：大模型训练与量化**
     - [x] [模型量化实战](./docs/chapter13/01_quantization.md)
-    - [x] [Deepspeed 框架介绍](./docs/chapter13/01_deepspeed.md)
+    - [x] [Deepspeed 框架介绍](./docs/chapter13/02_deepspeed.md)
 
 ### 第四部分：应用部署篇
 - **第 1 章：模型服务部署**
