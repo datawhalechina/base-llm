@@ -130,17 +130,17 @@ conda config --show channels
 
 如果后续遇到软件包冲突或安装失败，也可以根据提示临时切回官方源再重试。
 
-## 三、创建 base-nlp 专用虚拟环境
+## 三、创建 base-llm 专用虚拟环境
 
-为了避免与其他项目互相影响，强烈建议为本项目单独创建一个 `base-nlp` 环境。
+为了避免与其他项目互相影响，强烈建议为本项目单独创建一个 `base-llm` 环境。
 
 （1）在终端中运行：
 
 ```bash
-conda create -n base-nlp python=3.10
+conda create -n base-llm python=3.10
 ```
 
-- `base-nlp`：环境名称，可以根据喜好修改。
+- `base-llm`：环境名称，可以根据喜好修改。
 - `python=3.10`：本项目推荐使用 Python 3.10 版本。
 
 出现提示时输入 `y` 回车，等待环境创建完成。
@@ -148,10 +148,10 @@ conda create -n base-nlp python=3.10
 （2）可以通过以下命令激活环境：
 
 ```bash
-conda activate base-nlp
+conda activate base-llm
 ```
 
-激活成功后，命令行前缀会出现 `(base-nlp)`，表示当前所有 `python` / `pip` / `conda` 操作都在此环境中进行。若要退出该环境，可使用：
+激活成功后，命令行前缀会出现 `(base-llm)`，表示当前所有 `python` / `pip` / `conda` 操作都在此环境中进行。若要退出该环境，可使用：
 
 ```bash
 conda deactivate
@@ -162,10 +162,10 @@ conda deactivate
 （1）首先在终端中确保已激活环境：
 
 ```bash
-conda activate base-nlp
+conda activate base-llm
 ```
 
-（2）激活 `base-nlp` 环境后，可以先安装一些常用的第三方库，这些库涵盖了大部分数据处理与可视化需求。
+（2）激活 `base-llm` 环境后，可以先安装一些常用的第三方库，这些库涵盖了大部分数据处理与可视化需求。
 
 ```bash
 pip install numpy pandas matplotlib scikit-learn jupyter -y
