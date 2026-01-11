@@ -3,7 +3,7 @@
 </div>
 
 <div align="center">
-  <h2>从 NLP 到大语言模型</h2>
+  <h2>LLM 的前世今生</h2>
   <p><em>Base LLM is all you need</em></p>
 </div>
 
