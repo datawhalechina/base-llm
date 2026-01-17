@@ -24,7 +24,7 @@
   <em>图 6-17 Pipeline 源码</em>
 </p>
 
-> **彩蛋**：可以留意一下源码中的猫咪 emoji（🐈 🐈 🐈）。Hugging Face 的三位创始人都是法国人，而在法语中 “chat” 就是猫的意思，所以工程师用它暗示这里有“一堆 chats（猫）”。
+> 可以看到图中源码的猫咪 emoji（🐈 🐈 🐈）。Hugging Face 的三位创始人都是法国人，而在法语中 “chat” 就是猫的意思，所以工程师用它暗示这里有“一堆 chats（猫）”。哈哈，极客幽默。
 
 （2）言归正传，接下来我们需要在 `text_generation.py` 文件中的四个位置下断点。分别在 `preprocess()` 最后找到 `return inputs` 这一行；在 `_forward()` 中找到 `output = self.model.generate(`；在 `postprocess()` 的循环里找到 `text = self.tokenizer.decode(` 和 `if return_type == ReturnType.FULL_TEXT:`，然后把断点打在这四行。
 
