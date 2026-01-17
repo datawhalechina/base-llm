@@ -282,7 +282,7 @@ pipeline_outputs = generator(prompt_en, max_new_tokens=5, num_return_sequences=1
   <em>图 6-33 forward() 方法</em>
 </p>
 
-到了 `_forward()` 方法后，继续步过。需要注意在步过的同时我们还需要关注变量窗口，看看有没有什么可能有用的变量。当我们步过 `output = self.model.generate(...)`，明显会得到一个看变量值就大概率有用的 output 变量，那就在 `output = self.model.generate(...)` 这行下个断点，然后中止调试后重启调试。回到 `output = self.model.generate(...)` 后，两次步入就来到了 `generate()` 方法。在 `generate()` 中可以看到清晰的 1~9 的步骤注释，这有助于我们定位到需要分析的代码行。当然不是所有代码中都有这么清晰的注释，所以当前我们已知 `output` 的值是最后 return 来的，那就直接定位到最后的 `return result`。然后开始通过 Ctrl + B 转到定义回溯这个 `result` 是哪来的，这样就定位到了 `result = decoding_method(`，在这里下个断点。接着看 `decoding_method()` 中传入的参数，比如我想了解 `stopping_criteria=prepared_stopping_criteria` 这个参数是干嘛的，继续通过 Ctrl + B 转到定义回溯这个 `prepared_stopping_criteria` 是哪来的，然后下断点。以此类推，最后我们就回到了 `generate()` 开头的地方，这个时候需要的断点也已经都下好了。恢复程序后，顺着所下断点进行步过步入等操作后，我们就能完整分析出整个过程的数据流。
+到了 `_forward()` 方法后，继续步过。需要注意在步过的同时我们还需要关注变量窗口，看看有没有什么可能有用的变量。当我们步过 `output = self.model.generate(...)`，明显会得到一个大概率有用的 output 变量，那就在 `output = self.model.generate(...)` 这行下个断点，然后中止调试后重启调试。回到 `output = self.model.generate(...)` 后，两次步入就来到了 `generate()` 方法。在 `generate()` 中可以看到清晰的 1~9 的步骤注释，这有助于我们定位到需要分析的代码行。当然不是所有代码中都有这么清晰的注释，所以当前我们已知 `output` 的值是最后 return 来的，那就直接定位到最后的 `return result`。然后开始通过 Ctrl + B 转到定义回溯这个 `result` 是哪来的，这样就定位到了 `result = decoding_method(`，在这里下个断点。接着看 `decoding_method()` 中传入的参数，比如我想了解 `stopping_criteria=prepared_stopping_criteria` 这个参数是干嘛的，继续通过 Ctrl + B 转到定义回溯这个 `prepared_stopping_criteria` 是哪来的，然后下断点。以此类推，最后我们就回到了 `generate()` 开头的地方，这个时候需要的断点也已经都下好了。恢复程序后，顺着所下断点进行步过步入等操作后，我们就能完整分析出整个过程的数据流。
 
 ---
 
