@@ -22,6 +22,7 @@
     - **第 6 章：深入大模型架构**
         - [手搓一个大模型](chapter6/17_handcraft_llama2.md)
         - [MoE 架构解析](chapter6/18_MoE.md)
+        - [手撕大模型生成策略](chapter6/19_text_generation.md)
 
 - **第二部分：实战篇**
     - **第 1 章：文本分类**

@@ -94,7 +94,7 @@ Google Brain 团队（包括 Geoffrey Hinton 和 Jeff Dean 等）于 2017 年发
     <p align="center">
        <img src="./images/6_2_2.png" width="50%" alt="模型容量与效果对比图" />
        <br />
-       <em>图 6-4：模型容量与测试集困惑度的关系</em>
+       <em>图 6-4 模型容量与测试集困惑度的关系</em>
     </p>
 
 -   **避免“赢家通吃”的负载均衡**：
@@ -151,7 +151,7 @@ $$ \mathbf{E}_i(\mathbf{x}) = \mathbf{W}_{out} \cdot \text{ReLU}(\mathbf{W}_{in}
 <p align="center">
   <img src="./images/6_2_3.png" width="80%" alt="GShard MoE Transformer Encoder 架构图" />
   <br />
-  <em>图 6-5：GShard MoE Transformer Encoder 架构与并行策略</em>
+  <em>图 6-5 GShard MoE Transformer Encoder 架构与并行策略</em>
 </p>
 
 通过这种设计，GShard 实现了**亚线性（Sub-linear）** 的计算成本增长。模型参数量增加 16 倍（从 37.5B 到 600B），训练算力成本仅增加了不到 4 倍。
@@ -254,7 +254,7 @@ Switch Transformer 的主要创新在于提出了 **Switch Layer**。如图 6-6 
 <p align="center">
   <img src="./images/6_2_4.png" width="80%" alt="Switch Transformer Encoder 架构图" />
   <br />
-  <em>图 6-6：Switch Transformer Encoder 架构图</em>
+  <em>图 6-6 Switch Transformer Encoder 架构图</em>
 </p>
 
 #### 2.2.2 高效稀疏路由与负载均衡
@@ -271,7 +271,7 @@ $$
 <p align="center">
   <img src="./images/6_2_5.png" width="90%" alt="Token Routing Dynamics" />
   <br />
-  <em>图 6-7：Token 路由动态与专家容量示意图</em>
+  <em>图 6-7 Token 路由动态与专家容量示意图</em>
 </p>
 
 同时，Switch Transformer 还引入了一个辅助损失函数来尽量减少 Token 的丢弃，鼓励 Token 均匀分布到所有专家：
@@ -317,7 +317,7 @@ GLaM 展示了如何将 MoE 层有效地应用于 **Decoder-only** 的语言模�
 <p align="center">
   <img src="./images/6_2_6.png" width="40%" alt="GLaM 模型架构图" />
   <br />
-  <em>图 6-8：GLaM 模型架构图</em>
+  <em>图 6-8 GLaM 模型架构图</em>
 </p>
 
 -   **隔层稀疏**：类似于 GShard，GLaM 采用隔层替换策略，将每隔一个 Transformer 层中的前馈网络（FFN）替换为 MoE 层。
@@ -335,7 +335,7 @@ GLaM 的主要贡献在于证明了稀疏模型可以在减少计算资源消耗
 <p align="center">
   <img src="./images/6_2_7.png" width="100%" alt="GLaM 与 GPT-3 性能与成本对比" />
   <br />
-  <em>图 6-9：GLaM 与 GPT-3 在各任务性能及训练/推理成本上的详细对比</em>
+  <em>图 6-9 GLaM 与 GPT-3 在各任务性能及训练/推理成本上的详细对比</em>
 </p>
 
 表 6-2 进一步列出了具体的数值对比，直观地证明了 MoE 架构在实现高性能的同时，显著降低了算力成本。
@@ -406,7 +406,7 @@ GLaM 的主要贡献在于证明了稀疏模型可以在减少计算资源消耗
     <p align="center">
       <img src="./images/6_2_8.png" width="90%" alt="Mixture of Experts Layer" />
       <br />
-      <em>图 6-10：Mistral 8x7B 的 Top-2 路由机制示意图</em>
+      <em>图 6-10 Mistral 8x7B 的 Top-2 路由机制示意图</em>
     </p>
 -   **性能表现**：在 GSM8K（数学）、MMLU（综合知识）、HumanEval（代码）等基准测试上，Mistral 8x7B 以 13B 的活跃参数量超越了稠密的 **Llama 2 70B** 以及 **GPT-3.5**。如图 6-11，Mistral 8x7B（黄色柱状图）在几乎所有任务上都包围或持平了 Llama 2 70B（绿色柱状图），特别是在数学和代码生成任务上，其优势尤为显著。
 -   **长上下文能力**：Mistral 8x7B 支持 **32k** 的上下文长度，并且在长文本信息检索（Passkey Retrieval）任务中表现出了 100% 的召回率，证明了 MoE 架构在处理长序列时依然稳健。
@@ -414,7 +414,7 @@ GLaM 的主要贡献在于证明了稀疏模型可以在减少计算资源消耗
     <p align="center">
       <img src="./images/6_2_9.png" width="90%" alt="Mistral 8x7B 性能对比" />
       <br />
-      <em>图 6-11：Mistral 8x7B 与 Llama 2 系列在各基准测试上的性能对比</em>
+      <em>图 6-11 Mistral 8x7B 与 Llama 2 系列在各基准测试上的性能对比</em>
     </p>
 
 #### 3.1.2 路由机制分析
@@ -426,7 +426,7 @@ Mistral 团队对 Router 选择专家的行为进行了深入分析，得到了�
 <p align="center">
   <img src="./images/6_2_10.png" width="90%" alt="Mistral 8x7B 路由专家分布" />
   <br />
-  <em>图 6-12：不同领域数据在 Mistral 8x7B 各层中的专家路由分布（显示出无领域偏差的特性）</em>
+  <em>图 6-12 不同领域数据在 Mistral 8x7B 各层中的专家路由分布（显示出无领域偏差的特性）</em>
 </p>
 
 ### 3.2 DeepSeekMoE 与 DeepSeek-R1
@@ -440,7 +440,7 @@ Mistral 团队对 Router 选择专家的行为进行了深入分析，得到了�
 <p align="center">
   <img src="./images/6_2_11.png" width="80%" alt="DeepSeekMoE 架构图" />
   <br />
-  <em>图 6-13：DeepSeekMoE 架构演进：(a) 传统 Top-2 路由; (b) 细粒度专家分割; (c) 细粒度 + 共享专家隔离（最终架构）</em>
+  <em>图 6-13 DeepSeekMoE 架构演进：(a) 传统 Top-2 路由; (b) 细粒度专家分割; (c) 细粒度 + 共享专家隔离（最终架构）</em>
 </p>
 
 -  **细粒度专家分割（Fine-Grained Expert Segmentation）**：
@@ -464,7 +464,7 @@ DeepSeek-R1 不仅在常规任务上表现出色，更通过**大规模强化学
 <p align="center">
   <img src="./images/6_2_12.png" width="80%" alt="DeepSeek-R1 性能对比" />
   <br />
-  <em>图 6-14：DeepSeek-R1 在数学、代码及知识类基准测试上的性能表现</em>
+  <em>图 6-14 DeepSeek-R1 在数学、代码及知识类基准测试上的性能表现</em>
 </p>
 
 ## 四、MoE 代码实战
@@ -476,7 +476,7 @@ DeepSeek-R1 不仅在常规任务上表现出色，更通过**大规模强化学
 <p align="center">
   <img src="./images/6_2_13.svg" width="40%" alt="Llama2 + MoE 架构图" />
   <br />
-  <em>图 6-15：Llama2 + MoE 架构图</em>
+  <em>图 6-15 Llama2 + MoE 架构图</em>
 </p>
 
 > [本节完整代码](https://github.com/datawhalechina/base-nlp/tree/main/code/C6/MoE)
