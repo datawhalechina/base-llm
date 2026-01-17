@@ -1,8 +1,6 @@
 # 第三节 手撕大模型生成策略
 
-在前两节，我们通过 Llama2 和 MoE，深入理解了大模型的**网络架构**（即“大脑”是如何构造的）。但仅有架构还不够，模型前向传播输出的仅仅是概率分布（Logits），如何将这些概率一步步转化为流畅的文本，就是本节要探讨的核心——**解码策略**。
-
-我们将回到成熟的 **Transformers** 库，以 GPT 模型为例，避开繁琐的数学公式，直接通过**代码调试**的方式，探究 `model.generate()` 的底层工作原理，看看从“输入 Prompt”到“输出文本”的完整数据流是如何在代码中流转的。
+前两节我们通过 Llama2 和 MoE，深入理解了大模型的**网络架构**（即“大脑”是如何构造的）。但仅有架构还不够，模型前向传播输出的仅仅是概率分布（Logits），如何将这些概率一步步转化为流畅的文本，就是本节要探讨的核心——**解码策略**。我们将回到成熟的 **Transformers** 库，以 GPT 模型为例，避开繁琐的数学公式，直接通过**代码调试**的方式，探究 `model.generate()` 的底层工作原理，看看从“输入 Prompt”到“输出文本”的完整数据流是如何在代码中流转的。
 
 ## 一、“逐 token 生成”在做什么
 
@@ -18,9 +16,7 @@
 
 接下来按下面步骤进行调试：
 
-（1）在 `pipeline_outputs = generator(prompt_en, max_new_tokens=5, num_return_sequences=1)` 这一行打断点。
-
-（2）Debug 运行脚本，程序停住后，**步入（Step Into）**，如图 6-17 我们就进入 Transformers 包内部代码。
+（1）在 `pipeline_outputs = generator(prompt_en, max_new_tokens=5, num_return_sequences=1)` 这一行打断点。Debug 运行脚本，程序停住后，**步入（Step Into）**，如图 6-17 我们就进入 Transformers 包内部代码。
 
 <p align="center">
   <img src="./images/6_3_2.png" width="90%" alt="Pipeline 源码" />
@@ -30,11 +26,11 @@
 
 > **彩蛋**：可以留意一下源码中的猫咪 emoji（🐈 🐈 🐈）。Hugging Face 的三位创始人都是法国人，而在法语中 “chat” 就是猫的意思，所以工程师用它暗示这里有“一堆 chats（猫）”。
 
-（3）言归正传，接下来我们需要在 `text_generation.py` 文件中的四个位置下断点。分别在 `preprocess()` 最后找到 `return inputs` 这一行；在 `_forward()` 中找到 `output = self.model.generate(`；在 `postprocess()` 的循环里找到 `text = self.tokenizer.decode(` 和 `if return_type == ReturnType.FULL_TEXT:`，然后把断点打在这四行。
+（2）言归正传，接下来我们需要在 `text_generation.py` 文件中的四个位置下断点。分别在 `preprocess()` 最后找到 `return inputs` 这一行；在 `_forward()` 中找到 `output = self.model.generate(`；在 `postprocess()` 的循环里找到 `text = self.tokenizer.decode(` 和 `if return_type == ReturnType.FULL_TEXT:`，然后把断点打在这四行。
 
 > 调试器命中断点时通常会停在该行“执行之前”，所以如果某个变量是“在这一行才刚被赋值/更新”的，需要**单步执行一次**或把断点下在**下一行**，才能看到它的最终值。
 
-（4）断点下好后，点击 **恢复程序（Continue / Resume）**，程序会依次停在这四个位置。
+（3）断点下好后，点击 **恢复程序（Continue / Resume）**，程序会依次停在这四个位置。
 
 ### 1.2 Pipeline 接口的输入与输出结构
 
