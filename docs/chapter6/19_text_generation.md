@@ -16,7 +16,7 @@
 
 接下来按下面步骤进行调试：
 
-（1）在 `pipeline_outputs = generator(prompt_en, max_new_tokens=5, num_return_sequences=1)` 这一行打断点。Debug 运行脚本，程序停住后，**步入（Step Into）**，如图 6-17 我们就进入 Transformers 包内部代码。
+（1）在 `pipeline_outputs = generator(prompt_en, max_new_tokens=5, num_return_sequences=1)` 这一行打断点。Debug 运行脚本，程序停住后，点击**步入（Step Into）**，如图 6-17 我们就进入 Transformers 包内部代码。
 
 <p align="center">
   <img src="./images/6_3_2.png" width="90%" alt="Pipeline 源码" />
