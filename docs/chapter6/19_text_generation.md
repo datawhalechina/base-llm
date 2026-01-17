@@ -266,7 +266,7 @@ pipeline_outputs = generator(prompt_en, max_new_tokens=5, num_return_sequences=1
   <em>图 6-31 化繁为简</em>
 </p>
 
-那么首先我们就在 `pipeline_outputs = generator(prompt_en, max_new_tokens=5, num_return_sequences=1)` 下个断点，看看 `generator` 是什么类型。发现这是个对象后，那我们唯二不认识的代码行就只剩一行了，第一行无非就是创建了一个对象。接着步入这段代码会来到三只小猫的“魔法方法”（`__call__`）。这里通常主要是一些输入格式判断和改写，我们可以直接跳到最后的 `return super().__call__(...)` 并继续步入。再次来到了一大段看起来像“框架胶水”的代码，也还是先定位到最后的 `return` 并步入。通过 `return self.run_single(...)` 步入之后我们就来到了图 6-32 所示的 `run_single()` 方法。
+那么首先我们就在 `pipeline_outputs = generator(...)` 下个断点，看看 `generator` 是什么类型。发现这是个对象后，那我们唯二不认识的代码行就只剩一行了，第一行无非就是创建了一个对象。接着步入这段代码会来到有三只小猫注释的“魔法方法”。这里主要是一些输入格式判断和改写，我们可以直接跳到最后的 `return super().__call__(...)` 并继续步入。再次来到了一大段看起来像“框架胶水”的代码，也还是先定位到最后的 `return` 并步入。通过 `return self.run_single(...)` 步入之后我们就来到了图 6-32 所示的 `run_single()` 方法。
 
 <p align="center">
   <img src="./images/6_3_17.png" width="90%" alt="run_single 主流程" />
