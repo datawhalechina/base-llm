@@ -6,7 +6,7 @@
 
 ### 1.1 从 Pipeline 入手调试准备
 
-我们重新打开在第五章中实现的 [GPT 实战代码](https://github.com/datawhalechina/base-nlp/blob/main/code/C5/02_gpt_usage.py)，如图 6-16 注释掉其他内容，只保留文件最后的 `# pipeline 应用` 的部分以及相关初始化变量。具体调试方法可以参考第八章 [NER 项目的数据处理](https://github.com/datawhalechina/base-nlp/blob/main/docs/chapter8/02_data_processing.md#211-%E8%B0%83%E8%AF%95%E8%A7%82%E5%AF%9F%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)中的简单说明。
+重新打开在第五章中实现的 [GPT 实战代码](https://github.com/datawhalechina/base-nlp/blob/main/code/C5/02_gpt_usage.py)，如图 6-16 注释掉其他内容，只保留文件最后的 `# pipeline 应用` 的部分以及相关初始化变量。具体调试方法可以参考第八章 [NER 项目的数据处理](https://github.com/datawhalechina/base-nlp/blob/main/docs/chapter8/02_data_processing.md#211-%E8%B0%83%E8%AF%95%E8%A7%82%E5%AF%9F%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)中的简单说明。
 
 <p align="center">
   <img src="./images/6_3_1.png" width="90%" alt="Pipeline 调试代码准备" />
@@ -16,7 +16,7 @@
 
 接下来按下面步骤进行调试：
 
-（1）在 `pipeline_outputs = generator(prompt_en, max_new_tokens=5, num_return_sequences=1)` 这一行打断点。Debug 运行脚本，程序停住后，点击**步入（Step Into）**，如图 6-17 我们就进入 Transformers 包内部代码。
+（1）在 `pipeline_outputs = generator(...)` 这一行打断点。Debug 运行脚本，程序停住后，点击**步入（Step Into）**，如图 6-17 我们就进入 Transformers 包内部代码。
 
 <p align="center">
   <img src="./images/6_3_2.png" width="90%" alt="Pipeline 源码" />
@@ -46,7 +46,7 @@
 
 （2）停在 `_forward()`：确认真正的解码发生在 `model.generate()`
 
-这里我们可以看到 **Pipeline 只是把参数整理好，真正的解码策略发生在 `model.generate()` 里**。如图 6-19 这里就是“最终生效”的生成参数，可以看到这里传入了我们在前处理阶段得到的 `input_ids` 和 `attention_mask`，同时还有我们在 `generator()` 中传入的 `max_new_tokens=5`、`num_return_sequences=1` 两个参数。
+这里我们可以看到 **Pipeline 只是把参数整理好，真正的解码策略发生在 `model.generate()` 里**。如图 6-19 这里就是“最终生效”的生成参数，这里传入了我们在前处理阶段得到的 `input_ids` 和 `attention_mask`，同时还有我们在 `generator()` 中传入的 `max_new_tokens=5`、`num_return_sequences=1` 两个参数。
 
 <p align="center">
   <img src="./images/6_3_4.png" width="90%" alt="_forward 阶段：generate_kwargs" />
@@ -58,7 +58,7 @@
 
 后处理阶段的任务就是把生成出来的 token ids 用 `tokenizer.decode(...)` 还原成文本，并决定返回 **FULL_TEXT/NEW_TEXT**。
 
-- 如图 6-20，程序首先停在 `text = self.tokenizer.decode(` 的位置。这里有个关键参数 `sequence`：通过 `Ctrl + B`（转到定义）回溯可以发现，这个值来自 `model_outputs["generated_sequence"][0]`。所以实际上在 Transformers 的实现里，模型推理结束后会得到一个字典，包含 `'generated_sequence'`、`'input_ids'` 以及 `'prompt_text'`。接下来 `generated_sequence` 会被转换成 Python 列表，并在 `for idx, sequence in enumerate(generated_sequence):` 里逐条取出，因此此处的 `sequence` 本质上就是“一条生成序列”的 token id 列表。观察 `sequence` 的值可以看到：前面的四个 `40, 588, 6600, 23018` 是我们的输入 token，而后面五个 `9015, 553, 531, 262, 582` 则是模型新生成的内容，并且与 `max_new_tokens=5` 的设置对应。
+- 如图 6-20，程序首先停在 `text = self.tokenizer.decode(` 的位置。这里有个关键参数 `sequence`：通过 `Ctrl + B`（转到定义）回溯可以发现，这个值来自 `model_outputs["generated_sequence"][0]`。所以实际上在 Transformers 的实现里，模型推理结束后会得到一个字典，包含 `'generated_sequence'`、`'input_ids'` 以及 `'prompt_text'`。接下来 `generated_sequence` 会被转换成 Python 列表，并在 `for idx, sequence in enumerate(generated_sequence):` 里逐条取出，因此此处的 `sequence` 本质上就是“一条生成序列”的 token id 列表。观察 `sequence` 的值能够发现，前面的四个 `40, 588, 6600, 23018` 是我们的输入 token，而后面五个 `9015, 553, 531, 262, 582` 则是模型新生成的内容，并且与 `max_new_tokens=5` 的设置对应。
 
   <p align="center">
     <img src="./images/6_3_5.png" width="90%" alt="后处理阶段的 sequence" />
@@ -66,7 +66,7 @@
     <em>图 6-20 后处理阶段的 sequence</em>
   </p>
 
-- 再次恢复程序会停到 `if return_type == ReturnType.FULL_TEXT:`。此时重点看 `prompt_length` 和 `all_text`：`prompt_length` 表示“prompt 在 decode 后的长度”，Pipeline 用它把 `text` 的前半段（prompt 部分）裁掉，得到“新增内容” `all_text`（也就是 **NEW_TEXT**）。如图 6-21 所示，本次推理的结果被 decode 成字符串后的结果是 `' chicken, but I like'`，而 `prompt_length=19` 也刚好对应 “**"I"(1) + 空格(1) + "like"(4) + 空格(1) + "eating"(6) + 空格(1) + "fried"(5) = 19**”。如果设置的是 **FULL_TEXT**（默认值），Pipeline 会在后面把 `prompt_text` 再拼回去，所以最终输出会包含原始 prompt。如果想看到最后输出的结果，也可以在当前代码文件尾部 `return records` 的位置继续下断点，这里就不再赘述。
+- 再次恢复程序会停到 `if return_type == ReturnType.FULL_TEXT:`。此时重点看 `prompt_length` 和 `all_text`：`prompt_length` 表示“prompt 在 decode 后的长度”，Pipeline 用它把 `text` 的前半段（prompt 部分）裁掉，得到“新增内容” `all_text`（也就是 **NEW_TEXT**）。如图 6-21 所示，本次推理的结果被 decode 成字符串后的结果是 `' chicken, but I like'`，而 `prompt_length=19` 也刚好对应 **“"I"(1) + 空格(1) + "like"(4) + 空格(1) + "eating"(6) + 空格(1) + "fried"(5) = 19”**。如果设置的是 **FULL_TEXT**（默认值），Pipeline 会在后面把 `prompt_text` 再拼回去，所以最终输出会包含原始 prompt。如果想看到最后输出的结果，也可以在当前代码文件尾部 `return records` 的位置继续下断点，这里就不再赘述。
 
   <p align="center">
     <img src="./images/6_3_6.png" width="90%" alt="后处理阶段的 prompt_length 与 all_text" />
