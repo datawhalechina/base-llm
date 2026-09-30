@@ -162,15 +162,15 @@ def _extract_entities(self, tokens, tags):
 
 `predict` 方法负责执行从原始文本到实体列表的完整端到端流程。
 
-1.  **预处理**:
+1.  **预处理**：
     -   调用 `tokenizer` 将输入文本转换为 `token_ids`。
     -   将 `token_ids` 转换为 `torch.Tensor`，并添加一个 batch 维度（因为模型期望的输入是 `[batch_size, seq_len]`）。
     -   创建 `attention_mask`。
     -   将所有张量移动到 `self.device`。
-2.  **模型预测**:
+2.  **模型预测**：
     -   使用 `with torch.no_grad():` 临时禁用梯度计算，减少内存消耗并加速推理过程。
     -   将 `token_ids` 和 `attention_mask` 送入模型，得到 `logits`。
-3.  **后处理**:
+3.  **后处理**：
     -   对 `logits` 在最后一个维度上执行 `argmax`，得到预测的 `label_ids` 序列。
     -   使用 `id2tag` 映射，将 `label_ids` 转换为 `tags` 字符串列表。
     -   调用 `_extract_entities` 方法，完成最终的解码，返回实体列表。
@@ -645,8 +645,8 @@ from src.loss.ner_loss import NerLoss # 导入新模块
 
 这是因为 `Trainer` 在评估阶段同样使用了这个自定义的、加权的损失函数来计算验证集 `loss`。这个 `loss` 主要反映的是**训练目标**的优化情况，而不是一个标准的评估指标。
 
--   **权重影响**: 由于实体部分的损失被赋予了很高的权重（例如 `entity_loss_weight=10.0`），少数几个实体相关的错误就会导致 `loss` 值大幅波动或居高不下。
--   **硬负样本挖掘影响**: `hard_negative_mining` 策略会动态地聚焦于模型最容易搞错的那些非实体 `O` 标签。随着训练的进行，简单的负样本损失会降低，但模型会转而面对更“棘手”的硬样本，导致计算出的 `non_ner_loss` 可能不会持续下降。
+-   **权重影响**：由于实体部分的损失被赋予了很高的权重（例如 `entity_loss_weight=10.0`），少数几个实体相关的错误就会导致 `loss` 值大幅波动或居高不下。
+-   **硬负样本挖掘影响**：`hard_negative_mining` 策略会动态地聚焦于模型最容易搞错的那些非实体 `O` 标签。随着训练的进行，简单的负样本损失会降低，但模型会转而面对更“棘手”的硬样本，导致计算出的 `non_ner_loss` 可能不会持续下降。
 
 因此，当使用这些高级损失策略时，**验证集 `loss` 不再是衡量模型好坏的主要标准**。应将注意力更多地放在能够直接反映任务最终目标的指标上，对于 NER 任务而言，这个指标就是**实体级别的 F1 分数**。这也是 `Trainer` 将 F1 作为保存最佳模型依据的原因。
 
@@ -660,7 +660,7 @@ from src.loss.ner_loss import NerLoss # 导入新模块
 
 为了将日志记录功能模块化，可以创建一个专门的 `TensorBoardLogger` 类来封装所有与 `SummaryWriter` 相关的操作。
 
-1.  **创建 `TensorBoardLogger` 类**:
+1.  **创建 `TensorBoardLogger` 类**：
 
     在 `src/utils/` 目录下创建 `logger.py` 文件。这个类将负责 `SummaryWriter` 的初始化、指标记录和关闭。
 
@@ -693,7 +693,7 @@ from src.loss.ner_loss import NerLoss # 导入新模块
                 self.writer.close()
     ```
 
-2.  **在 `configs.py` 中添加配置**:
+2.  **在 `configs.py` 中添加配置**：
 
     ```python
     # code/C8/src/configs/configs.py
@@ -707,7 +707,7 @@ from src.loss.ner_loss import NerLoss # 导入新模块
     # ... (省略)
     ```
 
-3.  **在 `Trainer` 中使用 `TensorBoardLogger`**:
+3.  **在 `Trainer` 中使用 `TensorBoardLogger`**：
 
     ```python
     # code/C8/src/trainer/trainer.py
@@ -731,7 +731,7 @@ from src.loss.ner_loss import NerLoss # 导入新模块
             self.logger.close()
     ```
 
-4.  **添加随机数种子**
+4.  **添加随机数种子**：
 
     为了使可视化对比与调参更稳定可复现，建议在训练启动时固定随机数种子，读取 `configs.py` 中新增的 `seed` 配置。
 
@@ -758,7 +758,7 @@ from src.loss.ner_loss import NerLoss # 导入新模块
 
 为了让这个逻辑更清晰且可复用，可将其封装到一个独立的 `EarlyStopping` 类中，这个类就像一个“回调”一样，在每个 epoch 结束时被 `Trainer` 调用来检查是否需要停止。
 
-1.  **创建 `EarlyStopping` 工具类**:
+1.  **创建 `EarlyStopping` 工具类**：
 
     在 `src/utils/` 目录下创建一个新文件 `early_stop.py`。
 
@@ -798,7 +798,7 @@ from src.loss.ner_loss import NerLoss # 导入新模块
             return self.early_stop
     ```
 
-2.  **在 `configs.py` 中添加配置**:
+2.  **在 `configs.py` 中添加配置**：
 
     ```python
     # code/C8/src/configs/configs.py
@@ -807,7 +807,7 @@ from src.loss.ner_loss import NerLoss # 导入新模块
     early_stopping_patience: int = 5 # 提前停止的耐心轮数
     ```
 
-3.  **在 `Trainer` 中集成 `EarlyStopping` 实例**:
+3.  **在 `Trainer` 中集成 `EarlyStopping` 实例**：
 
     ```python
     # code/C8/src/trainer/trainer.py
@@ -842,7 +842,7 @@ from src.loss.ner_loss import NerLoss # 导入新模块
 
 实现此功能主要分为三步：首先添加配置项，然后在 `Trainer` 中构建核心的保存与恢复逻辑，最后在主训练脚本中启用它。
 
-1.  **在 `configs.py` 中添加配置**:
+1.  **在 `configs.py` 中添加配置**：
 
     首先，在 `NerConfig` 中增加一个 `resume_checkpoint` 字段，用于指定需要恢复的检查点文件路径。如果它为 `None`，则从头开始训练。
 
