@@ -88,6 +88,7 @@
 ## 内容大纲
 
 ### 第一部分：理论篇
+
 - **第 1 章：NLP 简介**
     - [x] [NLP 概述](./docs/chapter1/01_nlp_intro.md)
     - [x] [环境准备](./docs/chapter1/02_preparation.md)
@@ -115,6 +116,7 @@
     - [x] [上下文学习与提示词技术](./docs/chapter6/20_in_context_learning.md)
 
 ### 第二部分：实战篇
+
 - **第 1 章：文本分类**
     - [x] [文本分类简单实现](./docs/chapter7/01_text_classification.md)
     - [x] [基于 LSTM 的文本分类](./docs/chapter7/02_lstm_text_classification.md)
@@ -126,6 +128,7 @@
     - [x] [模型的推理与优化](./docs/chapter8/04_evaluation_and_prediction.md)
 
 ### 第三部分：微调量化篇
+
 - **第 1 章：参数高效微调**
     - [x] [PEFT 技术综述](./docs/chapter11/01_PEFT.md)
     - [x] [LoRA 方法详解](./docs/chapter11/02_lora.md)
@@ -139,6 +142,7 @@
     - [x] [Deepspeed 框架介绍](./docs/chapter13/02_deepspeed.md)
 
 ### 第四部分：应用部署篇
+
 - **第 1 章：模型服务部署**
     - [x] [FastAPI 模型部署实战](./docs/chapter14/01_fastapi.md)
     - [x] [云服务器模型部署实战](./docs/chapter14/02_uv_linux.md)
@@ -148,6 +152,7 @@
     - [x] [搭建 Jenkins CI/CD 自动化部署流水线](./docs/chapter15/02_Jenkins.md)
 
 ### 第五部分：大模型安全
+
 - **第 1 章：安全全景与威胁建模**
     - [x] [大模型安全总览](./docs/chapter16/01_LLM_safety_overview.md)
     - [x] [威胁建模及风险分析](./docs/chapter16/02_threat_modeling_analysis.md)
@@ -156,6 +161,7 @@
     - [ ] 安全架构设计（建设中）
 
 ### 第六部分：多模态前沿
+
 - **第 1 章：认识多模态边界**
     - [x] [多模态概述](./docs/chapter19/01_multimodal_definition.md)
     - [x] [图文多模态](./docs/chapter19/02_ViT_CLIP.md)
@@ -163,9 +169,9 @@
     - [x] [BLIP-2 与 LLaVA](./docs/chapter20/01_blip2_llava.md)
     - [x] [原生统一架构](./docs/chapter20/02_native_unified.md)
     - [x] [从 0 训练简化版 Omni 模型](./docs/chapter20/03_simplified_omni.md)
-
+d
 ### Extra-chapter
-    - []()
+    - [x] [入门大模型 API 调用](https://github.com/datawhalechina/base-llm/blob/main/Extra-chapter/minimax-api-tutorial/readme.md)
 
 
 ## 致谢
