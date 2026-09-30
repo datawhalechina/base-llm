@@ -853,7 +853,7 @@ from src.loss.ner_loss import NerLoss # 导入新模块
     resume_checkpoint: str = None 
     ```
 
-2.  **为 `Trainer` 新增保存与恢复能力**:
+2.  **为 `Trainer` 新增保存与恢复能力**：
 
     接下来，为 `Trainer` 类赋予保存和恢复检查点的能力。这包括新增两个核心方法 `_save_checkpoint` 和 `_resume_checkpoint`，并修改 `__init__` 和 `fit` 方法来调用它们。
 
@@ -896,7 +896,7 @@ from src.loss.ner_loss import NerLoss # 导入新模块
     - `fit` 方法的循环 `for epoch in range(1, epochs + 1)` 需要修改为 `for epoch in range(self.start_epoch, epochs + 1)`，以便从恢复的轮数继续训练。
     - `fit` 方法在每轮结束时调用 `_save_checkpoint` 来保存当前状态。
 
-3.  **在 `05_train.py` 中启用并校验**:
+3.  **在 `05_train.py` 中启用并校验**：
 
     最后，在主训练脚本中，我们需要在初始化 `Trainer` 之前，先检查配置文件中 `resume_checkpoint` 指定的路径是否有效。如果路径无效，就将其置为 `None`，以确保 `Trainer` 能够安全地从头开始训练，而不是因找不到文件而报错。
 
