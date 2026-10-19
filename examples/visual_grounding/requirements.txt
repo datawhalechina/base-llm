@@ -1,0 +1,4 @@
+torch>=2.6
+transformers>=5.13,<6
+Pillow>=10
+pyarrow>=17
