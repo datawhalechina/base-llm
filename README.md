@@ -172,6 +172,7 @@
 d
 ### Extra-chapter
     - [x] [入门大模型 API 调用](https://github.com/datawhalechina/base-llm/blob/main/Extra-chapter/minimax-api-tutorial/readme.md)
+    - [x] [虛擬人智能交互：可替換 LLM 的多輪對話 Demo](./Extra-chapter/virtual-human-interaction/readme.md)
 
 
 ## 致谢
