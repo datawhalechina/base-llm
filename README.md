@@ -169,6 +169,7 @@
     - [x] [BLIP-2 与 LLaVA](./docs/chapter20/01_blip2_llava.md)
     - [x] [原生统一架构](./docs/chapter20/02_native_unified.md)
     - [x] [从 0 训练简化版 Omni 模型](./docs/chapter20/03_simplified_omni.md)
+    - [x] [VLM OCR 與文檔結構化](./docs/chapter20/04_vlm_ocr.md)
 d
 ### Extra-chapter
     - [x] [入门大模型 API 调用](https://github.com/datawhalechina/base-llm/blob/main/Extra-chapter/minimax-api-tutorial/readme.md)

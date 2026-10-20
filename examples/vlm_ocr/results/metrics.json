@@ -1,0 +1,175 @@
+{
+  "RapidOCR + label parsing": {
+    "sample_count": 12,
+    "parseable_json_rate": 1.0,
+    "field_accuracy": 0.9791666666666666,
+    "field_accuracy_by_name": {
+      "merchant": 1.0,
+      "document_id": 1.0,
+      "date": 1.0,
+      "currency": 1.0,
+      "subtotal": 1.0,
+      "tax": 1.0,
+      "total": 1.0,
+      "items": 0.8333333333333334
+    },
+    "document_exact_match_rate": 0.8333333333333334,
+    "character_accuracy": 0.998639455782313,
+    "character_error_rate": 0.0013605442176870747,
+    "character_count": 2205,
+    "field_counts": {
+      "merchant": {
+        "correct": 12,
+        "total": 12
+      },
+      "document_id": {
+        "correct": 12,
+        "total": 12
+      },
+      "date": {
+        "correct": 12,
+        "total": 12
+      },
+      "currency": {
+        "correct": 12,
+        "total": 12
+      },
+      "subtotal": {
+        "correct": 12,
+        "total": 12
+      },
+      "tax": {
+        "correct": 12,
+        "total": 12
+      },
+      "total": {
+        "correct": 12,
+        "total": 12
+      },
+      "items": {
+        "correct": 10,
+        "total": 12
+      }
+    },
+    "failure_examples": [
+      {
+        "id": "invoice-01",
+        "field": "items",
+        "expected": [
+          {
+            "name": "筆記本",
+            "quantity": "2",
+            "unit_price": "18.00",
+            "amount": "36.00"
+          },
+          {
+            "name": "中性筆",
+            "quantity": "3",
+            "unit_price": "6.50",
+            "amount": "19.50"
+          }
+        ],
+        "actual": [
+          {
+            "name": "笔記本",
+            "quantity": "2",
+            "unit_price": "18.00",
+            "amount": "36.00"
+          },
+          {
+            "name": "中性笔",
+            "quantity": "3",
+            "unit_price": "6.50",
+            "amount": "19.50"
+          }
+        ]
+      },
+      {
+        "id": "invoice-05",
+        "field": "items",
+        "expected": [
+          {
+            "name": "海報印刷",
+            "quantity": "10",
+            "unit_price": "8.80",
+            "amount": "88.00"
+          },
+          {
+            "name": "裝訂服務",
+            "quantity": "1",
+            "unit_price": "35.00",
+            "amount": "35.00"
+          }
+        ],
+        "actual": [
+          {
+            "name": "海報印刷",
+            "quantity": "10",
+            "unit_price": "8.80",
+            "amount": "88.00"
+          },
+          {
+            "name": "裝訂服务",
+            "quantity": "1",
+            "unit_price": "35.00",
+            "amount": "35.00"
+          }
+        ]
+      }
+    ]
+  },
+  "Qwen2.5-VL-3B-Instruct": {
+    "sample_count": 12,
+    "parseable_json_rate": 1.0,
+    "field_accuracy": 1.0,
+    "field_accuracy_by_name": {
+      "merchant": 1.0,
+      "document_id": 1.0,
+      "date": 1.0,
+      "currency": 1.0,
+      "subtotal": 1.0,
+      "tax": 1.0,
+      "total": 1.0,
+      "items": 1.0
+    },
+    "document_exact_match_rate": 1.0,
+    "character_accuracy": 1.0,
+    "character_error_rate": 0.0,
+    "character_count": 2205,
+    "field_counts": {
+      "merchant": {
+        "correct": 12,
+        "total": 12
+      },
+      "document_id": {
+        "correct": 12,
+        "total": 12
+      },
+      "date": {
+        "correct": 12,
+        "total": 12
+      },
+      "currency": {
+        "correct": 12,
+        "total": 12
+      },
+      "subtotal": {
+        "correct": 12,
+        "total": 12
+      },
+      "tax": {
+        "correct": 12,
+        "total": 12
+      },
+      "total": {
+        "correct": 12,
+        "total": 12
+      },
+      "items": {
+        "correct": 12,
+        "total": 12
+      }
+    },
+    "failure_examples": []
+  }
+}

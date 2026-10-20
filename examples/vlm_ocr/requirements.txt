@@ -1,0 +1,7 @@
+Pillow>=10.0
+rapidocr>=3.0
+onnxruntime>=1.18
+transformers>=4.49
+accelerate>=1.0
+bitsandbytes>=0.45
+qwen-vl-utils>=0.0.10
