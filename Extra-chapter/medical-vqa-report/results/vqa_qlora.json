@@ -1,0 +1,55 @@
+{
+ "summary": {
+  "model": "D:\\用户数据\\桌面\\datawhale\\base-llm-contribution\\models\\qwen25vl-3b",
+  "adapter": "adapters/vqa-rad-lora",
+  "n": 451,
+  "closed_acc": 0.6951672862453532,
+  "n_closed": 269,
+  "open_acc": 0.3626373626373626,
+  "n_open": 182,
+  "overall_acc": 0.5609756097560976,
+  "elapsed_sec": 354.2
+ },
+ "sample_records": [
+  {
+   "idx": 0,
+   "question": "is there evidence of an aortic aneurysm?",
+   "gt": "yes",
+   "pred": "yes",
+   "closed": true,
+   "correct": true
+  },
+  {
+   "idx": 1,
+   "question": "is there airspace consolidation on the left side?",
+   "gt": "yes",
+   "pred": "yes",
+   "closed": true,
+   "correct": true
+  },
+  {
+   "idx": 2,
+   "question": "is there any intraparenchymal abnormalities in the lung fields?",
+   "gt": "no",
+   "pred": "no",
+   "closed": true,
+   "correct": true
+  },
+  {
+   "idx": 3,
+   "question": "which side of the heart border is obscured?",
+   "gt": "right",
+   "pred": "right",
+   "closed": false,
+   "correct": true
+  },
+  {
+   "idx": 4,
+   "question": "where are the kidney?",
+   "gt": "not seen here",
+   "pred": "right",
+   "closed": false,
+   "correct": false
+  }
+ ]
+}
