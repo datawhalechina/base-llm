@@ -1,0 +1,28 @@
+{
+ "summary": {
+  "model": "D:\\用户数据\\桌面\\datawhale\\base-llm-contribution\\models\\qwen25vl-3b",
+  "adapter": null,
+  "n": 30,
+  "bleu4": 0.011952760499794988,
+  "rougeL_f": 0.1698729543620255,
+  "elapsed_sec": 129.4,
+  "disclaimer": "For research/demo use only. NOT for clinical use."
+ },
+ "sample_records": [
+  {
+   "idx": 0,
+   "reference": "Normal cardiomediastinal silhouette. There is no focal consolidation. There are no XXXX of a large pleural effusion. There is no pneumothorax. There is no acute bony abnormality seen.",
+   "generated": "The chest X-ray reveals a normal-sized heart with no signs of cardiomegaly. The mediastinum appears to be of normal width without evidence of widening or mass effect. Both lung fields show clear markings with no visible infiltrates, consolidations, or masses. The pleural spaces appear to be clear with no signs of effusion or thickening. There is no evidence of pneumothorax or tension pneumothorax. The overall appearance suggests no acute pathologies affecting the thoracic cavity."
+  },
+  {
+   "idx": 1,
+   "reference": "Lungs are clear. There is no pneumothorax or pleural effusion. The heart and mediastinum are within normal limits. Bony structures are intact.",
+   "generated": "The chest X-ray reveals a normal-sized heart with no signs of cardiomegaly. The mediastinum appears to be of normal width without evidence of widening or compression. The lung fields show clear and transparent opacities, indicating no significant infiltrates or consolidations. The pleural spaces appear to be well-defined with no signs of effusion or thickening. Overall, the imaging is consistent with no immediate clinical concern."
+  },
+  {
+   "idx": 2,
+   "reference": "Cardiac and mediastinal contours are within normal limits. The lungs are clear. Bony structures are intact.",
+   "generated": "The chest X-ray reveals a normal-sized heart with no evidence of cardiomegaly. The mediastinum appears to be of normal width without signs of widening or compression. Both lung fields show clear markings with no visible infiltrates, consolidations, or masses. The pleural spaces appear to be well-defined with no signs of effusion or fluid accumulation. Overall, the imaging is consistent with no immediate abnormalities requiring further investigation."
+  }
+ ]
+}
